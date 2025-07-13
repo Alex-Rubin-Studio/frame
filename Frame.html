@@ -193,6 +193,154 @@
 
     /* --- Media Queries for Responsiveness --- */
 
+
+    /* Small screens (e.g., Mobile Phones, up to 600px) */
+    @media (max-width: 600px) {
+        html {
+            font-size: 14px; /* Reduce base font size for smaller screens */
+        }
+
+        body {
+            padding: 0.5rem; /* Less padding on very small screens */
+        }
+
+        .game-title {
+            font-size: 1.8rem; /* Smaller title */
+            white-space: normal; /* Allow wrapping */
+        }
+
+        .bigTable {
+            border-width: 6px; /* Thinner border */
+            width: 99%; /* Maximize width usage */
+            max-width: 400px; /* Smaller max-width for very small screens */
+        }
+
+        .masterTable {
+            border-width: 5px; /* Thinner border */
+            margin: 0.5% auto auto; /* Adjusted margin */
+        }
+
+        .masterTable td {
+            border-width: 2px; /* Thinner cell borders */
+            padding: 0.2rem; /* Reduced cell padding */
+            font-size: 1.2rem; /* Smaller cell font size */
+            border-radius: 35%; /* Slightly less rounded corners */
+        }
+
+        .grouped-cell {
+            font-size: 1.5rem; /* Smaller grouped cell font size */
+            padding: 0.2rem;
+        }
+
+        .grouped-cell img {
+            height: 60%; /* Slightly smaller image on small screens */
+        }
+
+        button {
+            padding: 0.5em 0.8em; /* Smaller button padding */
+            font-size: 1em; /* Smaller button font size */
+            border-width: 6px; /* Thinner button border */
+            border-radius: 20px;
+        }
+
+        #buttonContainer button {
+            min-width: 80px; /* Even smaller min-width for buttons */
+            max-width: 150px;
+        }
+    }
+
+    /* Medium screens (e.g., Tablets, between 601px and 1024px) */
+    @media (min-width: 601px) and (max-width: 1024px) {
+        html {
+            font-size: 15px; /* Adjust base font size */
+        }
+
+        .game-title {
+            font-size: 2.5rem; /* Medium title size */
+        }
+
+        .bigTable {
+            border-width: 10px; /* Medium border */
+            max-width: 650px; /* Slightly smaller max-width than desktop */
+        }
+
+        .masterTable {
+            border-width: 8px; /* Medium border */
+        }
+
+        .masterTable td {
+            border-width: 3px; /* Medium cell borders */
+            padding: 0.4rem; /* Medium cell padding */
+            font-size: 1.8rem; /* Medium cell font size */
+        }
+
+        .grouped-cell {
+            font-size: 2rem;
+            padding: 0.4rem;
+        }
+
+        .grouped-cell img {
+            height: 65%;
+        }
+
+        button {
+            font-size: 1.1em; /* Medium button font size */
+            padding: 0.6em 0.9em;
+            border-width: 10px;
+        }
+
+        #buttonContainer button {
+            min-width: 100px;
+            max-width: 160px;
+        }
+    }
+
+    /* Large screens (e.g., Desktops, 1025px and up) - Optional: Can explicitly set styles if desired */
+    @media (min-width: 1025px) {
+        html {
+            font-size: 16px; /* Default base font size */
+        }
+
+        .game-title {
+            font-size: 3.25rem; /* Original desktop title size */
+        }
+
+        .bigTable {
+            border-width: 12px;
+            max-width: 750px; /* Max width for large screens */
+        }
+
+        .masterTable {
+            border-width: 10px;
+        }
+
+        .masterTable td {
+            border-width: 4px;
+            padding: 0.5rem;
+            font-size: 2.25rem;
+        }
+
+        .grouped-cell {
+            font-size: 2.5rem;
+            padding: 0.5rem;
+        }
+
+        .grouped-cell img {
+            height: 70%;
+        }
+
+        button {
+            font-size: 1.2em;
+            padding: 0.75em 1em;
+            border-width: 12px;
+        }
+
+        #buttonContainer button {
+            min-width: 120px;
+            max-width: 200px;
+        }
+    }
+    
 </style>
 </head>
 
