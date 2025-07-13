@@ -20,7 +20,7 @@
         align-items: center;
         min-height: 100vh;
         margin: 0;
-        padding: 0; /* No body padding, bigTable handles outer spacing */
+        padding: 0;
         box-sizing: border-box;
         overflow-x: hidden;
     }
@@ -40,70 +40,60 @@
     .bigTable {
         width: 98%;
         max-width: 750px;
-        max-height: 95vh; /* Limits overall height to viewport */
+        max-height: 95vh;
         margin: 0 auto;
         border: 12px outset orange;
         border-radius: 0px;
-        /* REMOVED: aspect-ratio: 1 / 1; */ /* Let height be determined by content + max-height */
         box-sizing: border-box;
         background-color: #f9f37d;
-        display: block; /* Allows margin:auto for centering and width/height controls */
-        padding: 0.5rem; /* Padding for the entire bigTable content area */
+        display: block;
+        padding: 0.4rem; /* Slightly reduced padding to give inner content more room */
     }
     
-    /* Crucial: This TD is the flex container for the main game sections */
     .bigTable > tbody > tr > td {
         display: flex;
         flex-direction: column;
         width: 100%;
-        height: 100%; /* Take full height of bigTable's content area */
+        height: 100%;
         box-sizing: border-box;
-        padding: 0; /* No padding on this container td, use gap or inner element padding */
-        justify-content: flex-start; /* Align content to the top */
-        gap: 10px; /* Consistent vertical spacing between button and game grid sections */
+        padding: 0;
+        justify-content: flex-start;
+        /* REMOVED: gap: 10px; -- This will be replaced by margin-bottom on buttonContainer */
     }
 
-    /* New wrapper for the game grid to manage masterTable's flex behavior */
     .game-grid-wrapper {
-        flex-grow: 1; /* Takes all available vertical space */
-        flex-shrink: 1; /* Allows it to shrink if content needs more space */
-        min-height: 0; /* Crucial for flex items with internal content/aspect-ratio */
-        display: flex; /* Make this a flex container to center masterTable within it */
-        justify-content: center; /* Center masterTable horizontally */
-        align-items: center; /* Center masterTable vertically */
-        overflow: hidden; /* Hide any overflow if masterTable is slightly too big */
-        padding: 5px; /* Optional: Add a little padding around the game grid if desired */
-        /* NEW: Add aspect-ratio to the wrapper itself */
-        aspect-ratio: 6 / 5; /* This wrapper will now maintain the grid shape */
+        flex-grow: 1;
+        flex-shrink: 1;
+        min-height: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        padding: 0; /* REMOVED: padding: 5px; -- This space is now part of the masterTable's border or other elements */
+        aspect-ratio: 6 / 5;
     }
 
-    /* Update .masterTable */
     .masterTable {
         margin: 0;
-        width: 100%; /* Now fill 100% of the wrapper's width */
-        height: 100%; /* And 100% of the wrapper's height */
-        /* REMOVED: aspect-ratio: 6 / 5; from here */
-        /* Removed max-width/max-height as width/height 100% within the aspect-ratio wrapper is usually enough */
-        
+        width: 100%;
+        height: 100%;
         border: 10px outset blue;
         border-radius: 0px;
         background-color: #fcf4dd;
         table-layout: fixed;
     }
 
-    /* Styles for the standard game cells */
     .masterTable td {
         border: 4px solid #a0aec0;
         border-radius: 45%;
         background-color: white;
-        height: auto; /* Let height be determined by masterTable's aspect-ratio */
-        /* Updated padding and font-size with clamp for better responsiveness */
-        padding: 0.4rem; /* Slightly reduced base padding */
+        height: auto;
+        padding: 0.4rem;
         width: calc(100% / 6);
         text-align: center;
         vertical-align: middle;
-        font-size: clamp(0.8rem, 4vw, 2.25rem); /* Min, preferred (vw based), Max font-size */
-        line-height: 1; /* Added to reduce vertical spacing within cell */
+        font-size: clamp(0.8rem, 4vw, 2.25rem);
+        line-height: 1;
         font-weight: bold;
         color: #2d3748;
         cursor: pointer;
@@ -115,20 +105,17 @@
         transform: scale(1.03);
     }
 
-    /* Styling for correctly guessed cells (light green) */
     .masterTable td.correct {
         background-color: #9ae6b4;
         pointer-events: none;
         cursor: default;
     }
 
-    /* Styling for incorrectly guessed cells (red) */
     .masterTable td.incorrect {
         background-color: #fc8181;
         animation: shake 0.5s ease-out;
     }
 
-    /* Keyframe animation for shake effect */
     @keyframes shake {
         0% { transform: translateX(0); }
         25% { transform: translateX(-5px); }
@@ -137,7 +124,6 @@
         100% { transform: translateX(0); }
     }
 
-    /* Styles for the grouped cell (the one with the image) */
     .grouped-cell {
         font-weight: bold;
         color: brown;
@@ -147,12 +133,11 @@
         text-align: center;
         vertical-align: middle;
         overflow: hidden;
-        padding: 0.5rem; /* Keep this as it is for the image cell */
-        font-size: 2.5rem; /* This might need clamp too if it's causing issues */
+        padding: 0.5rem;
+        font-size: 2.5rem;
         position: relative;
     }
 
-    /* Styles for the image inside the grouped cell */
     .grouped-cell img {
         height: 70%;
         object-fit: contain;
@@ -188,12 +173,10 @@
         color: darkblue;
     }
 
-    /* Button specific colors */
     .full-screen-button { background-color:#c2b3ee }
     .new-game-button { background-color:#93fcb3 }
     .game-over-button { background-color:#fcbb93 }
 
-    /* Hover and active states for all buttons */
     button:hover {
         transform: translateY(-2px);
         box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
@@ -204,7 +187,6 @@
         border-style: inset;
     }
 
-    /* Styles for the button container to spread them evenly */
     #buttonContainer {
         width: 100%;
         margin: 0;
@@ -212,7 +194,8 @@
         flex-wrap: wrap;
         justify-content: space-between;
         align-items: center;
-        gap: 10px;
+        /* NEW: Added margin-bottom to create space below the button container */
+        margin-bottom: 10px; /* Replaces the gap from the parent flex */
         padding: 5px;
         box-sizing: border-box;
         flex-shrink: 0;
@@ -238,7 +221,6 @@
 
     /* --- Media Queries for Responsiveness --- */
 
-    /* Small screens (e.g., Mobile Phones, up to 600px) */
     @media (max-width: 600px) {
         html {
             font-size: 14px;
@@ -254,8 +236,8 @@
         }
         .masterTable td {
             border-width: 2px;
-            padding: 0.15rem; /* Adjusted for smaller screens */
-            font-size: clamp(0.7rem, 3vw, 1.2rem); /* Adjusted clamp values for small screens */
+            padding: 0.15rem;
+            font-size: clamp(0.7rem, 3vw, 1.2rem);
             border-radius: 35%;
         }
         .grouped-cell {
@@ -275,13 +257,11 @@
             min-width: 80px;
             max-width: 150px;
         }
-        /* Adjust padding for .game-grid-wrapper on small screens */
-        .game-grid-wrapper {
-            padding: 2px;
+        #buttonContainer {
+             margin-bottom: 8px; /* Adjusted for smaller screens */
         }
     }
 
-    /* Medium screens (e.g., Tablets, between 601px and 1024px) */
     @media (min-width: 601px) and (max-width: 1024px) {
         html {
             font-size: 15px;
@@ -299,8 +279,8 @@
         }
         .masterTable td {
             border-width: 3px;
-            padding: 0.3rem; /* Adjusted for medium screens */
-            font-size: clamp(0.9rem, 3.5vw, 1.8rem); /* Adjusted clamp values */
+            padding: 0.3rem;
+            font-size: clamp(0.9rem, 3.5vw, 1.8rem);
         }
         .grouped-cell {
             font-size: 2rem;
@@ -318,9 +298,11 @@
             min-width: 100px;
             max-width: 160px;
         }
+        #buttonContainer {
+            margin-bottom: 10px; /* Consistent for medium screens */
+        }
     }
 
-    /* Large screens (e.g., Desktops, 1025px and up) */
     @media (min-width: 1025px) {
         html {
             font-size: 16px;
@@ -338,8 +320,8 @@
         }
         .masterTable td {
             border-width: 4px;
-            padding: 0.4rem; /* Adjusted for large screens */
-            font-size: clamp(1rem, 4vw, 2.25rem); /* Adjusted clamp values */
+            padding: 0.4rem;
+            font-size: clamp(1rem, 4vw, 2.25rem);
         }
         .grouped-cell {
             font-size: 2.5rem;
@@ -356,6 +338,9 @@
         #buttonContainer button {
             min-width: 120px;
             max-width: 200px;
+        }
+        #buttonContainer {
+            margin-bottom: 12px; /* Adjusted for larger screens */
         }
     }
 
