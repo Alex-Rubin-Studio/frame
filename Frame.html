@@ -73,13 +73,17 @@
         align-items: center; /* Center masterTable vertically */
         overflow: hidden; /* Hide any overflow if masterTable is slightly too big */
         padding: 5px; /* Optional: Add a little padding around the game grid if desired */
+        /* NEW: Add aspect-ratio to the wrapper itself */
+        aspect-ratio: 6 / 5; /* This wrapper will now maintain the grid shape */
     }
 
+    /* Update .masterTable */
     .masterTable {
-        margin: 0; 
-        height: 100%; /* MasterTable explicitly takes 100% of its wrapper's height */
-        aspect-ratio: 6 / 5; /* This will now determine the width based on the height */
-        max-width: 100%; /* Ensure the calculated width doesn't overflow its wrapper */
+        margin: 0;
+        width: 100%; /* Now fill 100% of the wrapper's width */
+        height: 100%; /* And 100% of the wrapper's height */
+        /* REMOVED: aspect-ratio: 6 / 5; from here */
+        /* Removed max-width/max-height as width/height 100% within the aspect-ratio wrapper is usually enough */
         
         border: 10px outset blue;
         border-radius: 0px;
@@ -93,11 +97,13 @@
         border-radius: 45%;
         background-color: white;
         height: auto; /* Let height be determined by masterTable's aspect-ratio */
-        padding: 0.5rem;
+        /* Updated padding and font-size with clamp for better responsiveness */
+        padding: 0.4rem; /* Slightly reduced base padding */
         width: calc(100% / 6);
         text-align: center;
         vertical-align: middle;
-        font-size: 2.25rem;
+        font-size: clamp(0.8rem, 4vw, 2.25rem); /* Min, preferred (vw based), Max font-size */
+        line-height: 1; /* Added to reduce vertical spacing within cell */
         font-weight: bold;
         color: #2d3748;
         cursor: pointer;
@@ -141,8 +147,8 @@
         text-align: center;
         vertical-align: middle;
         overflow: hidden;
-        padding: 0.5rem;
-        font-size: 2.5rem;
+        padding: 0.5rem; /* Keep this as it is for the image cell */
+        font-size: 2.5rem; /* This might need clamp too if it's causing issues */
         position: relative;
     }
 
@@ -248,8 +254,8 @@
         }
         .masterTable td {
             border-width: 2px;
-            padding: 0.2rem;
-            font-size: 1.2rem;
+            padding: 0.15rem; /* Adjusted for smaller screens */
+            font-size: clamp(0.7rem, 3vw, 1.2rem); /* Adjusted clamp values for small screens */
             border-radius: 35%;
         }
         .grouped-cell {
@@ -293,8 +299,8 @@
         }
         .masterTable td {
             border-width: 3px;
-            padding: 0.4rem;
-            font-size: 1.8rem;
+            padding: 0.3rem; /* Adjusted for medium screens */
+            font-size: clamp(0.9rem, 3.5vw, 1.8rem); /* Adjusted clamp values */
         }
         .grouped-cell {
             font-size: 2rem;
@@ -315,159 +321,4 @@
     }
 
     /* Large screens (e.g., Desktops, 1025px and up) */
-    @media (min-width: 1025px) {
-        html {
-            font-size: 16px;
-        }
-        .game-title {
-            font-size: 3.25rem;
-        }
-        .bigTable {
-            border-width: 12px;
-            max-width: 750px;
-            max-height: 95vh;
-        }
-        .masterTable {
-            border-width: 10px;
-        }
-        .masterTable td {
-            border-width: 4px;
-            padding: 0.5rem;
-            font-size: 2.25rem;
-        }
-        .grouped-cell {
-            font-size: 2.5rem;
-            padding: 0.5rem;
-        }
-        .grouped-cell img {
-            height: 70%;
-        }
-        button {
-            font-size: 1.2em;
-            padding: 0.75em 1em;
-            border-width: 12px;
-        }
-        #buttonContainer button {
-            min-width: 120px;
-            max-width: 200px;
-        }
-    }
-
-</style>
-</head>
-
-<body>
-
-    <table class="bigTable">
-        <tbody>
-            <tr>
-                <td>
-                    <div class="game-content-wrapper">
-                        <div id="buttonContainer">
-                            <ul class="game-title" id="gameTitle">Find the ABCs!</ul>
-                            <button class="full-screen-button" id="fullScreenButton">FULL<br>SCREEN</button>
-                            <button class="new-game-button" id="newGameButton">NEW<br>GAME</button>
-                            <button class="game-over-button" id="gameOverButton"><a href="Choice.html">GAME<br>OVER</a></button>
-                        </div>
-                        <div class="game-grid-wrapper">
-                            <table class="masterTable" style="text-align:center; background-color:#fcf4dd;">
-                                <tr style="height: 0; visibility: collapse; border-spacing: 0;">
-                                    <td style="width: 16.66%;"></td>
-                                    <td style="width: 16.66%;"></td>
-                                    <td style="width: 16.66%;"></td>
-                                    <td style="width: 16.66%;"></td>
-                                    <td style="width: 16.66%;"></td>
-                                    <td style="width: 16.66%;"></td>
-                                </tr>
-                                <tr>
-                                    <td id="cell-0">11</td>
-                                    <td id="cell-1">12</td>
-                                    <td id="cell-0">13</td>
-                                    <td id="cell-1">14</td>
-                                    <td id="cell-2">15</td>
-                                    <td id="cell-3">16</td>
-                                </tr>
-                                <tr>
-                                    <td id="cell-4">21</td>
-                                    <td id="cell-5">22</td>
-                                    <td id="cell-4">23</td>
-                                    <td id="cell-5">24</td>
-                                    <td id="cell-6">25</td>
-                                    <td id="cell-7">26</td>
-                                </tr>
-                                <tr>
-                                    <td id="cell-8">31</td>
-                                    <td id="cell-9">32</td>
-                                    <td id="cell-10">33</td>
-                                    <td id="cell-11">34</td>
-                                    <td id="cell-12">35</td>
-                                    <td id="cell-13">36</td>
-                                </tr>
-                                <tr>
-                                    <td id="cell-14">41</td>
-                                    <td id="cell-15">42</td>
-                                    <td id="cell-16">43</td>
-                                    <td id="cell-17">44</td>
-                                    <td id="cell-18">45</td>
-                                    <td id="cell-19">46</td>
-                                </tr>
-                                <tr>
-                                    <td id="cell-20">51</td>
-                                    <td id="cell-21">52</td>
-                                    <td id="cell-22">53</td>
-                                    <td id="cell-23">54</td>
-                                    <td id="cell-24">55</td>
-                                    <td id="cell-25">56</td>
-                                </tr>
-                                <tr>
-                                    <td id="cell-20">61</td>
-                                    <td id="cell-21">62</td>
-                                    <td id="cell-22">53</td>
-                                    <td id="cell-23">64</td>
-                                    <td id="cell-24">65</td>
-                                    <td id="cell-25">66</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const fullScreenButton = document.getElementById('fullScreenButton');
-
-            if (fullScreenButton) {
-                fullScreenButton.addEventListener('click', () => {
-                    if (!document.fullscreenElement) {
-                        // If not in full-screen, request full-screen for the document body
-                        if (document.documentElement.requestFullscreen) {
-                            document.documentElement.requestFullscreen();
-                        } else if (document.documentElement.mozRequestFullScreen) { /* Firefox */
-                            document.documentElement.mozRequestFullScreen();
-                        } else if (document.documentElement.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
-                            document.documentElement.webkitRequestFullscreen();
-                        } else if (document.documentElement.msRequestFullscreen) { /* IE/Edge */
-                            document.documentElement.msRequestFullscreen();
-                        }
-                    } else {
-                        // If in full-screen, exit full-screen
-                        if (document.exitFullscreen) {
-                            document.exitFullscreen();
-                        } else if (document.mozCancelFullScreen) { /* Firefox */
-                            document.mozCancelFullScreen();
-                        } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
-                            document.webkitExitFullscreen();
-                        } else if (document.msExitFullscreen) { /* IE/Edge */
-                            document.msExitFullscreen();
-                        }
-                    }
-                });
-            }
-        });
-    </script>
-
-</body>
-</html>
+    @media (min-width: 1
