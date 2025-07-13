@@ -76,17 +76,15 @@
     }
 
     .masterTable {
-        margin: 0; /* No explicit margin, controlled by parent flex */
-        width: 100%; /* Take full width of its wrapper */
-        max-width: 100%; /* Ensure it doesn't overflow wrapper width */
-        max-height: 100%; /* Ensure it doesn't overflow wrapper height */
-        aspect-ratio: 6 / 5; /* Maintain grid shape */
+        margin: 0; 
+        height: 100%; /* MasterTable explicitly takes 100% of its wrapper's height */
+        aspect-ratio: 6 / 5; /* This will now determine the width based on the height */
+        max-width: 100%; /* Ensure the calculated width doesn't overflow its wrapper */
+        
         border: 10px outset blue;
         border-radius: 0px;
         background-color: #fcf4dd;
         table-layout: fixed;
-        height: auto; /* Let height be controlled by aspect-ratio and max-height */
-        /* Flex properties (flex-grow, flex-shrink, min-height) moved to .game-grid-wrapper */
     }
 
     /* Styles for the standard game cells */
