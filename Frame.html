@@ -321,4 +321,159 @@
     }
 
     /* Large screens (e.g., Desktops, 1025px and up) */
-    @media (min-width: 1
+    @media (min-width: 1025px) {
+        html {
+            font-size: 16px;
+        }
+        .game-title {
+            font-size: 3.25rem;
+        }
+        .bigTable {
+            border-width: 12px;
+            max-width: 750px;
+            max-height: 95vh;
+        }
+        .masterTable {
+            border-width: 10px;
+        }
+        .masterTable td {
+            border-width: 4px;
+            padding: 0.4rem; /* Adjusted for large screens */
+            font-size: clamp(1rem, 4vw, 2.25rem); /* Adjusted clamp values */
+        }
+        .grouped-cell {
+            font-size: 2.5rem;
+            padding: 0.5rem;
+        }
+        .grouped-cell img {
+            height: 70%;
+        }
+        button {
+            font-size: 1.2em;
+            padding: 0.75em 1em;
+            border-width: 12px;
+        }
+        #buttonContainer button {
+            min-width: 120px;
+            max-width: 200px;
+        }
+    }
+
+</style>
+</head>
+
+<body>
+
+    <table class="bigTable">
+        <tbody>
+            <tr>
+                <td>
+                    <div class="game-content-wrapper">
+                        <div id="buttonContainer">
+                            <ul class="game-title" id="gameTitle">Find the ABCs!</ul>
+                            <button class="full-screen-button" id="fullScreenButton">FULL<br>SCREEN</button>
+                            <button class="new-game-button" id="newGameButton">NEW<br>GAME</button>
+                            <button class="game-over-button" id="gameOverButton"><a href="Choice.html">GAME<br>OVER</a></button>
+                        </div>
+                        <div class="game-grid-wrapper">
+                            <table class="masterTable" style="text-align:center; background-color:#fcf4dd;">
+                                <tr style="height: 0; visibility: collapse; border-spacing: 0;">
+                                    <td style="width: 16.66%;"></td>
+                                    <td style="width: 16.66%;"></td>
+                                    <td style="width: 16.66%;"></td>
+                                    <td style="width: 16.66%;"></td>
+                                    <td style="width: 16.66%;"></td>
+                                    <td style="width: 16.66%;"></td>
+                                </tr>
+                                <tr>
+                                    <td id="cell-0">11</td>
+                                    <td id="cell-1">12</td>
+                                    <td id="cell-0">13</td>
+                                    <td id="cell-1">14</td>
+                                    <td id="cell-2">15</td>
+                                    <td id="cell-3">16</td>
+                                </tr>
+                                <tr>
+                                    <td id="cell-4">21</td>
+                                    <td id="cell-5">22</td>
+                                    <td id="cell-4">23</td>
+                                    <td id="cell-5">24</td>
+                                    <td id="cell-6">25</td>
+                                    <td id="cell-7">26</td>
+                                </tr>
+                                <tr>
+                                    <td id="cell-8">31</td>
+                                    <td id="cell-9">32</td>
+                                    <td id="cell-10">33</td>
+                                    <td id="cell-11">34</td>
+                                    <td id="cell-12">35</td>
+                                    <td id="cell-13">36</td>
+                                </tr>
+                                <tr>
+                                    <td id="cell-14">41</td>
+                                    <td id="cell-15">42</td>
+                                    <td id="cell-16">43</td>
+                                    <td id="cell-17">44</td>
+                                    <td id="cell-18">45</td>
+                                    <td id="cell-19">46</td>
+                                </tr>
+                                <tr>
+                                    <td id="cell-20">51</td>
+                                    <td id="cell-21">52</td>
+                                    <td id="cell-22">53</td>
+                                    <td id="cell-23">54</td>
+                                    <td id="cell-24">55</td>
+                                    <td id="cell-25">56</td>
+                                </tr>
+                                <tr>
+                                    <td id="cell-20">61</td>
+                                    <td id="cell-21">62</td>
+                                    <td id="cell-22">53</td>
+                                    <td id="cell-23">64</td>
+                                    <td id="cell-24">65</td>
+                                    <td id="cell-25">66</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const fullScreenButton = document.getElementById('fullScreenButton');
+
+            if (fullScreenButton) {
+                fullScreenButton.addEventListener('click', () => {
+                    if (!document.fullscreenElement) {
+                        // If not in full-screen, request full-screen for the document body
+                        if (document.documentElement.requestFullscreen) {
+                            document.documentElement.requestFullscreen();
+                        } else if (document.documentElement.mozRequestFullScreen) { /* Firefox */
+                            document.documentElement.mozRequestFullScreen();
+                        } else if (document.documentElement.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+                            document.documentElement.webkitRequestFullscreen();
+                        } else if (document.documentElement.msRequestFullscreen) { /* IE/Edge */
+                            document.documentElement.msRequestFullscreen();
+                        }
+                    } else {
+                        // If in full-screen, exit full-screen
+                        if (document.exitFullscreen) {
+                            document.exitFullscreen();
+                        } else if (document.mozCancelFullScreen) { /* Firefox */
+                            document.mozCancelFullScreen();
+                        } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
+                            document.webkitExitFullscreen();
+                        } else if (document.msExitFullscreen) { /* IE/Edge */
+                            document.msExitFullscreen();
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>
