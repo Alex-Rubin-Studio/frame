@@ -64,46 +64,52 @@
         flex-grow: 1;
         flex-shrink: 1;
         min-height: 0;
-        display: flex;
+        display: flex; /* Still a flex container to center its child (masterTable) */
         justify-content: center;
         align-items: center;
         overflow: hidden;
         padding: 0;
-        /* REMOVED aspect-ratio from here, will be managed by JS sizing */
-        position: relative; /* Crucial for absolute positioning of masterTable */
+        aspect-ratio: 6 / 5; /* This wrapper dictates the aspect ratio */
     }
 
-    /* UPDATED: .masterTable for transform scaling */
+    /* UPDATED: .masterTable for CSS Grid */
     .masterTable {
         margin: 0;
+        width: 100%; /* Fill the wrapper's width */
+        height: 100%; /* Fill the wrapper's height */
         border: 10px outset blue;
         border-radius: 0px;
         background-color: #fcf4dd;
-        table-layout: fixed;
-        box-sizing: border-box; /* Ensure borders are included in size */
+        box-sizing: border-box;
 
-        /* Base size for masterTable (e.g., max-width of bigTable, scaled for its aspect ratio) */
-        /* These are the dimensions it will *try* to be before scaling */
-        width: 730px; /* (750px max-width of bigTable - 2*10px masterTable border) */
-        height: calc(730px * 5 / 6); /* Calculate height based on 6/5 aspect ratio */
+        display: grid; /* Use CSS Grid for its internal layout */
+        grid-template-columns: repeat(6, 1fr); /* 6 equal columns */
+        grid-template-rows: repeat(6, 1fr); /* 6 equal rows */
+        gap: 0; /* No gaps between grid cells, borders will handle separation */
+        
+        /* REMOVED table-layout: fixed; and position: absolute; / transform: scale(); */
+    }
 
-        display: block; /* Important for transform scaling to work reliably */
-        position: absolute; /* Take it out of flow for precise positioning */
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(var(--master-table-scale, 1)); /* Apply scale factor from JS */
-        transform-origin: center center; /* Ensure scaling is from the center */
+    /* UPDATED: .masterTable tr and td - no more tr for grid layout, td are direct children */
+    .masterTable tr { /* This style is no longer necessary as td are direct grid items */
+        display: contents; /* Makes cells direct children of the grid container */
     }
 
     .masterTable td {
+        /* These styles now apply to individual grid items */
         border: 4px solid #a0aec0;
         border-radius: 45%;
         background-color: white;
-        height: auto; /* Let height be determined by masterTable's aspect-ratio */
+        
+        /* height and width from previous calc(100%/6) are now handled by 1fr units */
+        /* height: auto; -- no longer needed, 1fr takes care of row height */
+        /* width: calc(100% / 6); -- no longer needed, 1fr takes care of column width */
+        
+        display: flex; /* Make cell content a flex item to center text */
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+
         padding: 0.4rem;
-        width: calc(100% / 6);
-        text-align: center;
-        vertical-align: middle;
         font-size: clamp(0.8rem, 4vw, 2.25rem);
         line-height: 1;
         font-weight: bold;
@@ -244,8 +250,6 @@
         }
         .masterTable {
             border-width: 5px;
-            width: 380px; /* Adjust base width for small screens */
-            height: calc(380px * 5 / 6);
         }
         .masterTable td {
             border-width: 2px;
@@ -289,8 +293,6 @@
         }
         .masterTable {
             border-width: 8px;
-            width: 630px; /* Adjust base width for medium screens */
-            height: calc(630px * 5 / 6);
         }
         .masterTable td {
             border-width: 3px;
@@ -332,8 +334,6 @@
         }
         .masterTable {
             border-width: 10px;
-            width: 730px; /* Max base width for large screens */
-            height: calc(730px * 5 / 6);
         }
         .masterTable td {
             border-width: 4px;
@@ -379,20 +379,42 @@
                         </div>
                         <div class="game-grid-wrapper">
                             <table class="masterTable" style="text-align:center; background-color:#fcf4dd;">
-                                <tr style="height: 0; visibility: collapse; border-spacing: 0;">
-                                    <td style="width: 16.66%;"></td>
-                                    <td style="width: 16.66%;"></td>
-                                    <td style="width: 16.66%;"></td>
-                                    <td style="width: 16.66%;"></td>
-                                    <td style="width: 16.66%;"></td>
-                                    <td style="width: 16.66%;"></td>
-                                </tr>
-                                <tr><td id="cell-0">11</td><td id="cell-1">12</td><td id="cell-0">13</td><td id="cell-1">14</td><td id="cell-2">15</td><td id="cell-3">16</td></tr>
-                                <tr><td id="cell-4">21</td><td id="cell-5">22</td><td id="cell-4">23</td><td id="cell-5">24</td><td id="cell-6">25</td><td id="cell-7">26</td></tr>
-                                <tr><td id="cell-8">31</td><td id="cell-9">32</td><td id="cell-10">33</td><td id="cell-11">34</td><td id="cell-12">35</td><td id="cell-13">36</td></tr>
-                                <tr><td id="cell-14">41</td><td id="cell-15">42</td><td id="cell-16">43</td><td id="cell-17">44</td><td id="cell-18">45</td><td id="cell-19">46</td></tr>
-                                <tr><td id="cell-20">51</td><td id="cell-21">52</td><td id="cell-22">53</td><td id="cell-23">54</td><td id="cell-24">55</td><td id="cell-25">56</td></tr>
-                                <tr><td id="cell-20">61</td><td id="cell-21">62</td><td id="cell-22">53</td><td id="cell-23">64</td><td id="cell-24">65</td><td id="cell-25">66</td></tr>
+                                <td id="cell-0">11</td>
+                                <td id="cell-1">12</td>
+                                <td id="cell-0">13</td>
+                                <td id="cell-1">14</td>
+                                <td id="cell-2">15</td>
+                                <td id="cell-3">16</td>
+                                <td id="cell-4">21</td>
+                                <td id="cell-5">22</td>
+                                <td id="cell-4">23</td>
+                                <td id="cell-5">24</td>
+                                <td id="cell-6">25</td>
+                                <td id="cell-7">26</td>
+                                <td id="cell-8">31</td>
+                                <td id="cell-9">32</td>
+                                <td id="cell-10">33</td>
+                                <td id="cell-11">34</td>
+                                <td id="cell-12">35</td>
+                                <td id="cell-13">36</td>
+                                <td id="cell-14">41</td>
+                                <td id="cell-15">42</td>
+                                <td id="cell-16">43</td>
+                                <td id="cell-17">44</td>
+                                <td id="cell-18">45</td>
+                                <td id="cell-19">46</td>
+                                <td id="cell-20">51</td>
+                                <td id="cell-21">52</td>
+                                <td id="cell-22">53</td>
+                                <td id="cell-23">54</td>
+                                <td id="cell-24">55</td>
+                                <td id="cell-25">56</td>
+                                <td id="cell-20">61</td>
+                                <td id="cell-21">62</td>
+                                <td id="cell-22">53</td>
+                                <td id="cell-23">64</td>
+                                <td id="cell-24">65</td>
+                                <td id="cell-25">66</td>
                             </table>
                         </div>
                     </div>
@@ -404,53 +426,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const fullScreenButton = document.getElementById('fullScreenButton');
-            const gameGridWrapper = document.querySelector('.game-grid-wrapper');
-            const masterTable = document.querySelector('.masterTable');
 
-            function adjustMasterTableScale() {
-                if (!gameGridWrapper || !masterTable) return;
-
-                // Get the current dimensions of the wrapper
-                const wrapperWidth = gameGridWrapper.clientWidth;
-                const wrapperHeight = gameGridWrapper.clientHeight;
-
-                // Get the current (base) dimensions of the masterTable as defined in CSS
-                // These should correspond to its width/height from the media queries
-                const masterTableBaseWidth = masterTable.offsetWidth;
-                const masterTableBaseHeight = masterTable.offsetHeight;
-
-                if (masterTableBaseWidth === 0 || masterTableBaseHeight === 0) {
-                    // Table might not be rendered yet, retry or skip
-                    requestAnimationFrame(adjustMasterTableScale);
-                    return;
-                }
-
-                // Calculate scale factors needed to fit both horizontally and vertically
-                const scaleX = wrapperWidth / masterTableBaseWidth;
-                const scaleY = wrapperHeight / masterTableBaseHeight;
-
-                // Choose the smaller scale factor to ensure it fits completely
-                const scaleFactor = Math.min(scaleX, scaleY);
-
-                // Apply the scale factor as a CSS variable
-                masterTable.style.setProperty('--master-table-scale', scaleFactor);
-            }
-
-            // --- Event Listeners ---
-            
-            // Adjust on initial load
-            adjustMasterTableScale();
-
-            // Adjust on window resize (includes orientation change and fullscreen toggles)
-            window.addEventListener('resize', adjustMasterTableScale);
-
-            // Listen for fullscreen change events for extra robustness
-            document.addEventListener('fullscreenchange', adjustMasterTableScale);
-            document.addEventListener('webkitfullscreenchange', adjustMasterTableScale); // For Safari
-            document.addEventListener('mozfullscreenchange', adjustMasterTableScale); // For Firefox
-            document.addEventListener('MSFullscreenChange', adjustMasterTableScale); // For IE/Edge
-
-            // Fullscreen button functionality
             if (fullScreenButton) {
                 fullScreenButton.addEventListener('click', () => {
                     if (!document.fullscreenElement) {
@@ -476,6 +452,7 @@
                     }
                 });
             }
+            // Removed adjustMasterTableScale function and its event listeners as CSS Grid handles it.
         });
     </script>
 
