@@ -3,54 +3,119 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FRAME-3</title>
+    <title>FRAME-Gem</title>
 
 <style>
-
-
     body {
         font-family: 'Times';
         color: blue;
-/*        font-size: 60pt; */
         font-weight: bold;
         background-color: #1638ee;
         display: flex;
         flex-direction: column;
         justify-content: center; /* Center content vertically */
         align-items: center;
-        height: 100vh;
+        min-height: 100vh; /* Use min-height to allow content to expand if needed */
         margin: 0;
         padding: 1rem;
         box-sizing: border-box;
     }
 
-    .big-table { width:98%; max-width: 750px; min-width:300px; display: flex; flex-direction: column; align-content: space-between; align-items: center; margin: 0 auto; border: 10px outset orange; background-color: #eee716; text-align:center; padding: 5pt; }
-    .game-title { width:98%; border: 0px solid black; font-size:clamp(2rem, 8vw, 5rem); line-height: 0; margin: 1% auto;}
-    .button-container { width:98%; border: 0px solid black; margin:0 auto 1%; display: flex;
-        flex-direction: row; justify-content: space-around;}
-    .button-container button { width:25%; font-size:clamp(.1rem, 5vw, 2rem); font-family:'Times'; font-weight: 1000; color: #01056e; padding: 1% 0; border: 7px outset; border-radius: 25%; border-color: grey; cursor: pointer; transition: background-color 0.3s ease, transform 0.2s ease; box-shadow: 0 5px 10px #00000033; margin: 0; outline: none; }
+    .big-table {
+        width: 98%;
+        max-width: 750px;
+        min-width: 300px;
+        display: flex;
+        flex-direction: column;
+        align-content: space-between;
+        align-items: center;
+        margin: 0 auto;
+        border: 10px outset orange;
+        background-color: #eee716;
+        text-align: center;
+        padding: 5pt;
+        /* Ensure the big-table can shrink to fit vertical space if needed */
+        height: auto;
+        flex-shrink: 1; /* Allow the table to shrink */
+    }
+
+    .game-title {
+        width: 98%;
+        border: 0px solid black;
+        font-size:clamp(2rem, 8vw, 5rem);
+        line-height: 0;
+        margin: 1% auto;
+    }
+    .button-container {
+        width: 98%;
+        border: 0px solid black;
+        margin:0 auto 1%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+    .button-container button {
+        width: 25%;
+        font-size:clamp(.1rem, 5vw, 2rem);
+        font-family:'Times';
+        font-weight: 1000;
+        color: #01056e;
+        padding: 1% 0;
+        border: 7px outset;
+        border-radius: 25%;
+        border-color: grey;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        box-shadow: 0 5px 10px #00000033;
+        margin: 0;
+        outline: none;
+    }
     .button-container a { text-decoration: none;  color: #01056e}
     .full-screen-button { background-color:#c2b3ee }
     .new-game-button { background-color:#93fcb3 }
     .game-over-button { background-color:#fcbb93 }
 
-    .master-table { width:100%; margin-top:1%; border: 10px outset blue; }
+    .master-table {
+        width: 100%;
+        margin-top: 1%;
+        border: 10px outset blue;
+        /* Ensure table can fit within its container */
+        table-layout: fixed; /* Helps in consistent column widths */
+    }
     .master-table td {
         border: 4px solid #a0aec0;
         border-radius: 50%;
         background-color: white;
-/*        height: 100px; /* Default height for cells on desktop */
-        padding: 4%; /* Add internal padding to simulate spacing */
-        width: calc(100% / 6); /* Simpler width calculation now that spacing is handled by padding */
+        padding: 0.5%; /* Reduce padding to make cells smaller, will adjust further in media queries */
+        width: calc(100% / 6);
         text-align: center;
         vertical-align: middle;
-        font-size:clamp(.1rem, 5vw, 2.5rem); /* Default font size for desktop cells */
+        font-size:clamp(.1rem, 4vw, 2.5rem); /* Slightly adjust font clamp values */
         font-weight: bold;
         color: #2d3748;
         cursor: pointer;
         box-sizing: border-box;
-        position: relative; /* Needed for absolutely positioned image in grouped-cell */
+        position: relative;
+        /* Add a min-height to ensure cells don't collapse too much */
+        min-height: 50px; /* Adjust as needed */
     }
+    /* Make cells square-like using padding-bottom trick for aspect ratio */
+    .master-table td::before {
+        content: '';
+        display: block;
+        padding-top: 100%; /* Makes the height equal to the width */
+    }
+    .master-table td > * {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
 
     .master-table td:not(.grouped-cell):hover {
         transform: scale(1.03);
@@ -78,9 +143,44 @@
         100% { transform: translateX(0); }
     }
 
-        @media (orientation: portrait) {
-        body {  height: 100vh; }
+    /* Media query for landscape orientation on devices with max-height of 800px (common for tablets in landscape) */
+    @media (orientation: landscape) and (max-height: 800px) {
+        body {
+            padding: 0.5rem; /* Reduce overall padding */
         }
+        .big-table {
+            max-width: 95%; /* Allow it to take more width */
+            padding: 2pt; /* Reduce padding inside the big table */
+            height: 95vh; /* Try to make it fit 95% of the viewport height */
+            justify-content: space-around; /* Distribute space more evenly */
+        }
+        .game-title {
+            font-size: clamp(1.5rem, 6vw, 3rem); /* Smaller font size for title */
+            margin: 0.5% auto;
+        }
+        .button-container {
+            margin: 0 auto 0.5%; /* Reduce bottom margin */
+        }
+        .button-container button {
+            font-size: clamp(0.1rem, 3vw, 1.5rem); /* Smaller font size for buttons */
+            padding: 0.5% 0; /* Reduce padding on buttons */
+        }
+        .master-table {
+            margin-top: 0.5%; /* Reduce top margin for the table */
+        }
+        .master-table td {
+            font-size: clamp(0.1rem, 3vw, 1.5rem); /* Smaller font size for cells */
+            padding: 0.2%; /* Further reduce padding for cells */
+            min-height: 30px; /* Adjust minimum height if needed */
+        }
+    }
+
+    /* General portrait orientation styles */
+    @media (orientation: portrait) {
+        body {
+            height: 100vh;
+        }
+    }
 
 </style>
 </head>
@@ -95,59 +195,58 @@
     <button class="game-over-button" id="gameOverButton"><a href="Choice.html">GAME<br>OVER</a></button>
     </div>
     <table class="master-table" id="masterTable">
-        <tr>
-                <td id="cell-0">11</td>
-                <td id="cell-1">12</td>
-                <td id="cell-0">13</td>
-                <td id="cell-1">14</td>
-                <td id="cell-2">15</td>
-                <td id="cell-3">16</td>
-            </tr>
             <tr>
-                <td id="cell-4">21</td>
-                <td id="cell-5">22</td>
-                <td id="cell-4">23</td>
-                <td id="cell-5">24</td>
-                <td id="cell-6">25</td>
-                <td id="cell-7">26</td>
-            </tr>
-            <tr>
-                <td id="cell-8">31</td>
-                <td id="cell-9">32</td>
-                <td id="cell-10">33</td>
-                <td id="cell-11">34</td>
-                <td id="cell-12">35</td>
-                <td id="cell-13">36</td>
-            </tr>
-            <tr>
-                <td id="cell-14">41</td>
-                <td id="cell-15">42</td>
-                <td id="cell-16">43</td>
-                <td id="cell-17">44</td>
-                <td id="cell-18">45</td>
-                <td id="cell-19">46</td>
-            </tr>
-            <tr>
-                <td id="cell-20">51</td>
-                <td id="cell-21">52</td>
-                <td id="cell-22">53</td>
-                <td id="cell-23">54</td>
-                <td id="cell-24">55</td>
-                <td id="cell-25">56</td>
-            </tr>
-            <tr>
-                <td id="cell-20">61</td>
-                <td id="cell-21">62</td>
-                <td id="cell-22">53</td>
-                <td id="cell-23">64</td>
-                <td id="cell-24">65</td>
-                <td id="cell-25">66</td>
-            </tr>
+                    <td id="cell-0"><div>11</div></td>
+                    <td id="cell-1"><div>12</div></td>
+                    <td id="cell-0"><div>13</div></td>
+                    <td id="cell-1"><div>14</div></td>
+                    <td id="cell-2"><div>15</div></td>
+                    <td id="cell-3"><div>16</div></td>
+                </tr>
+                <tr>
+                    <td id="cell-4"><div>21</div></td>
+                    <td id="cell-5"><div>22</div></td>
+                    <td id="cell-4"><div>23</div></td>
+                    <td id="cell-5"><div>24</div></td>
+                    <td id="cell-6"><div>25</div></td>
+                    <td id="cell-7"><div>26</div></td>
+                </tr>
+                <tr>
+                    <td id="cell-8"><div>31</div></td>
+                    <td id="cell-9"><div>32</div></td>
+                    <td id="cell-10"><div>33</div></td>
+                    <td id="cell-11"><div>34</div></td>
+                    <td id="cell-12"><div>35</div></td>
+                    <td id="cell-13"><div>36</div></td>
+                </tr>
+                <tr>
+                    <td id="cell-14"><div>41</div></td>
+                    <td id="cell-15"><div>42</div></td>
+                    <td id="cell-16"><div>43</div></td>
+                    <td id="cell-17"><div>44</div></td>
+                    <td id="cell-18"><div>45</div></td>
+                    <td id="cell-19"><div>46</div></td>
+                </tr>
+                <tr>
+                    <td id="cell-20"><div>51</div></td>
+                    <td id="cell-21"><div>52</div></td>
+                    <td id="cell-22"><div>53</div></td>
+                    <td id="cell-23"><div>54</div></td>
+                    <td id="cell-24"><div>55</div></td>
+                    <td id="cell-25"><div>56</div></td>
+                </tr>
+                <tr>
+                    <td id="cell-20"><div>61</div></td>
+                    <td id="cell-21"><div>62</div></td>
+                    <td id="cell-22"><div>53</div></td>
+                    <td id="cell-23"><div>64</div></td>
+                    <td id="cell-24"><div>65</div></td>
+                    <td id="cell-25"><div>66</div></td>
+                </tr>
         </table>
 </div>
 
 <script>
-
 document.getElementById('fullScreenButton').addEventListener('click', () => {
     if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen().catch(err => {
@@ -157,9 +256,7 @@ document.getElementById('fullScreenButton').addEventListener('click', () => {
         document.exitFullscreen();
     }
 });
-    
 </script>
 
-    
 </body>
 </html>
