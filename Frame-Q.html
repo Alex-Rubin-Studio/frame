@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gem-3.1</title>
+    <title>Gem-4</title>
 
 <style>
     body {
@@ -83,44 +83,74 @@
         table-layout: fixed;
         flex-grow: 1;
         flex-shrink: 1;
-        /* overflow: auto; -- Removed for now, let's try to fit without scroll */
         min-height: 0;
-        /* This max-height needs to be very carefully calibrated with other elements */
-        max-height: 70%; /* This percentage is relative to big-table's height */
+
+        /* ---- NEW FLEX PROPERTIES FOR THE TABLE ITSELF ---- */
+        display: flex;
+        flex-direction: column; /* Make table content stack vertically */
+        height: 100%; /* Important: Make table take full height of its parent flex container */
     }
+
+    /* ---- NEW STYLES FOR TABLE ROWS (tr) ---- */
+    .master-table tr {
+        display: flex; /* Make rows flex containers */
+        flex-grow: 1; /* Each row takes equal vertical space */
+        flex-shrink: 1;
+        min-height: 0; /* Allow rows to shrink */
+        width: 100%; /* Ensure row spans full table width */
+    }
+
+    /* ---- REVISED STYLES FOR TABLE CELLS (td) ---- */
     .master-table td {
         border: 4px solid #a0aec0;
         border-radius: 50%;
         background-color: white;
-        /* --- CRUCIAL CHANGE HERE: Adjust padding --- */
-        /* Use a combination of vw (viewport width) and a fixed minimum for padding */
-/*        padding: 0.5vmin; /* Use smallest of viewport width/height for responsive padding */
-        width: calc(100% / 6); /* Still ensures 6 columns */
-        text-align: center;
-        vertical-align: middle;
-        font-weight: bold;
-        color: #2d3748;
-        cursor: pointer;
-        box-sizing: border-box;
-        position: relative;
+        /* Padding will now be handled by the inner div for visual space */
+        padding: 0; /* Set padding to 0 on TD itself */
+        
+        display: flex; /* Make TD a flex container for its content div */
+        justify-content: center;
+        align-items: center;
+        flex-grow: 1; /* Each cell takes equal horizontal space in its row */
+        flex-basis: 0; /* Combined with flex-grow:1 for equal distribution */
+
+        /* This is the key: Height defined by a combination of vh and calc */
+        /* For 6 rows and 6 columns, if we distribute height, each cell gets 1/6th of available height */
+        /* (100% of row height - borders).
+           The width is still (100% of row width / 6).
+           We want cells to be square, so height should match width.
+           We'll manage squareness with the inner div. */
+        position: relative; /* Needed for absolutely positioned inner div */
+        box-sizing: border-box; /* Include padding and border in element's total width and height */
     }
-    /* Make cells square-like using padding-bottom trick for aspect ratio */
+
+    /* Remove the padding-top trick from TD, let the inner div manage content/size */
     .master-table td::before {
-        content: '';
-        display: block;
-        padding-top: 100%; /* Makes the height equal to the width */
+        content: none; /* Remove the pseudo-element */
     }
-    .master-table td > div { /* Target the div directly for content */
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+
+    /* ---- REVISED STYLES FOR THE INNER DIV ---- */
+    .master-table td > div {
+        position: absolute; /* Position relative to its parent TD */
+        top: 2px; /* Small offset for border appearance */
+        left: 2px;
+        right: 2px;
+        bottom: 2px;
+        border-radius: 50%; /* Keep it round inside the cell */
         display: flex;
         justify-content: center;
         align-items: center;
-        /* --- CRUCIAL CHANGE HERE: Adjust font size of the content DIV --- */
-        font-size: clamp(.1rem, 3.5vw, 2rem); /* Slightly more aggressive clamping for content */
+        /* Calculate size based on min of width/height of the TD, maintaining aspect ratio */
+        min-width: 0;
+        min-height: 0; /* Allow div to shrink */
+
+        /* Font size needs to scale to fit within this dynamically sized div */
+        font-size: clamp(.1rem, 3.5vw, 2rem);
+        /* Ensure the div itself is square within the bounds of the TD */
+        aspect-ratio: 1 / 1; /* Makes the div square */
+        margin: auto; /* Center the square div in the td */
+        max-width: 90%; /* Prevent it from touching cell edges */
+        max-height: 90%; /* Prevent it from touching cell edges */
     }
 
 
@@ -158,35 +188,32 @@
         }
         .big-table {
             max-width: 95vw;
-            max-height: 95vh; /* Crucial: Limit big-table height to viewport height */
-            padding: 2pt; /* Reduce padding for big-table itself */
-            height: auto;
-            /* Adjust justify-content to optimize vertical space distribution in landscape */
-            justify-content: space-around; /* Distribute space more evenly */
+            max-height: 95vh;
+            padding: 2pt;
+            justify-content: space-around;
         }
         .game-title {
-            font-size: clamp(1.2rem, 5vw, 2.5rem); /* Even smaller font for title in landscape */
+            font-size: clamp(1.2rem, 5vw, 2.5rem);
             margin: 0.3% auto;
         }
         .button-container {
-            margin: 0.3% auto 0.5%; /* Reduce margins further */
+            margin: 0.3% auto 0.5%;
         }
         .button-container button {
-            font-size: clamp(0.1rem, 2.5vw, 1.2rem); /* Even smaller button font */
-            padding: 0.3% 0; /* Reduce padding on buttons */
+            font-size: clamp(0.1rem, 2.5vw, 1.2rem);
+            padding: 0.3% 0;
         }
         .master-table {
             margin-top: 0.3%;
-            /* Try reducing max-height slightly if still overflowing, e.g., to 65% or 60% */
-            max-height: 68%; /* Adjusted slightly for more room, find sweet spot */
-        }
-        .master-table td {
-            /* --- CRUCIAL CHANGE HERE: Landscape specific padding for TD --- */
-            padding: 0.3vmin; /* Very small padding in landscape, relies on inner div */
+            /* Removed explicit max-height, let flexbox handle distribution */
+            /* The height: 100% on .master-table ensures it fills its parent */
+            /* We will control cell size directly */
         }
         .master-table td > div {
-            /* --- CRUCIAL CHANGE HERE: Landscape specific font size for content DIV --- */
             font-size: clamp(0.1rem, 2.8vw, 1.3rem); /* Smaller font size for cells in landscape */
+            /* Further restrict div size in landscape if needed, e.g., max-width/height */
+            max-width: 95%; /* Small adjustment */
+            max-height: 95%; /* Small adjustment */
         }
     }
 
@@ -194,9 +221,6 @@
     @media (orientation: portrait) {
         body {
             height: 100vh;
-        }
-        .master-table td {
-            padding: 0.5vmin; /* Use same vmin for portrait for consistency */
         }
         .master-table td > div {
             font-size: clamp(.1rem, 3.5vw, 2rem);
