@@ -3,156 +3,54 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gem-4</title>
+    <title>FRAME</title>
 
 <style>
+
+
     body {
         font-family: 'Times';
         color: blue;
+/*        font-size: 60pt; */
         font-weight: bold;
         background-color: #1638ee;
         display: flex;
         flex-direction: column;
         justify-content: center; /* Center content vertically */
         align-items: center;
-        min-height: 100vh; /* Ensure body takes full viewport height */
+        max-height: 100vh;
         margin: 0;
         padding: 1rem;
         box-sizing: border-box;
     }
 
-    .big-table {
-        width: 98%;
-        max-width: 750px;
-        min-width: 300px;
-        display: flex;
-        flex-direction: column; /* This is crucial for vertical stacking */
-        justify-content: space-between; /* Distribute space among children */
-        align-items: center;
-        margin: 0 auto;
-        border: 10px outset orange;
-        background-color: #eee716;
-        text-align: center;
-        padding: 5pt;
-        height: auto; /* Let content define height initially */
-        flex-grow: 1; /* Allow it to grow to fill body space */
-        flex-shrink: 1; /* Allow it to shrink if needed */
-        min-height: 0; /* Important for flex items to shrink correctly */
-    }
-
-    .game-title {
-        width: 98%;
-        font-size:clamp(2rem, 8vw, 5rem);
-        line-height: 0;
-        margin: 1% auto;
-        flex-shrink: 0; /* Prevent title from shrinking */
-    }
-    .button-container {
-        width: 98%;
-        margin:0 auto 1%;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-        flex-shrink: 0; /* Prevent buttons from shrinking */
-    }
-    .button-container button {
-        width: 25%;
-        font-size:clamp(.1rem, 5vw, 2rem);
-        font-family:'Times';
-        font-weight: 1000;
-        color: #01056e;
-        padding: 1% 0;
-        border: 7px outset;
-        border-radius: 25%;
-        border-color: grey;
-        cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.2s ease;
-        box-shadow: 0 5px 10px #00000033;
-        margin: 0;
-        outline: none;
-    }
+    .big-table { width:98%; max-width: 750px; min-width:300px; display: flex; flex-direction: column; align-content: space-between; align-items: center; margin: 0 auto; border: 10px outset orange; background-color: #eee716; text-align:center; padding: 5pt; }
+    .game-title { width:98%; border: 0px solid black; font-size:clamp(2rem, 8vw, 5rem); line-height: 0; margin: 1% auto;}
+    .button-container { width:98%; border: 0px solid black; margin:0 auto 1%; display: flex;
+        flex-direction: row; justify-content: space-around;}
+    .button-container button { width:25%; font-size:clamp(.1rem, 5vw, 2rem); font-family:'Times'; font-weight: 1000; color: #01056e; padding: 1% 0; border: 7px outset; border-radius: 25%; border-color: grey; cursor: pointer; transition: background-color 0.3s ease, transform 0.2s ease; box-shadow: 0 5px 10px #00000033; margin: 0; outline: none; }
     .button-container a { text-decoration: none;  color: #01056e}
     .full-screen-button { background-color:#c2b3ee }
     .new-game-button { background-color:#93fcb3 }
     .game-over-button { background-color:#fcbb93 }
 
-    .master-table {
-        width: 100%;
-        margin-top: 1%;
-        border: 10px outset blue;
-        table-layout: fixed;
-        flex-grow: 1;
-        flex-shrink: 1;
-        min-height: 0;
-
-        /* ---- NEW FLEX PROPERTIES FOR THE TABLE ITSELF ---- */
-        display: flex;
-        flex-direction: column; /* Make table content stack vertically */
-        height: 100%; /* Important: Make table take full height of its parent flex container */
-    }
-
-    /* ---- NEW STYLES FOR TABLE ROWS (tr) ---- */
-    .master-table tr {
-        display: flex; /* Make rows flex containers */
-        flex-grow: 1; /* Each row takes equal vertical space */
-        flex-shrink: 1;
-        min-height: 0; /* Allow rows to shrink */
-        width: 100%; /* Ensure row spans full table width */
-    }
-
-    /* ---- REVISED STYLES FOR TABLE CELLS (td) ---- */
+    .master-table { width:100%; margin-top:1%; border: 10px outset blue; }
     .master-table td {
         border: 4px solid #a0aec0;
         border-radius: 50%;
         background-color: white;
-        /* Padding will now be handled by the inner div for visual space */
-        padding: 0; /* Set padding to 0 on TD itself */
-        
-        display: flex; /* Make TD a flex container for its content div */
-        justify-content: center;
-        align-items: center;
-        flex-grow: 1; /* Each cell takes equal horizontal space in its row */
-        flex-basis: 0; /* Combined with flex-grow:1 for equal distribution */
-
-        /* This is the key: Height defined by a combination of vh and calc */
-        /* For 6 rows and 6 columns, if we distribute height, each cell gets 1/6th of available height */
-        /* (100% of row height - borders).
-           The width is still (100% of row width / 6).
-           We want cells to be square, so height should match width.
-           We'll manage squareness with the inner div. */
-        position: relative; /* Needed for absolutely positioned inner div */
-        box-sizing: border-box; /* Include padding and border in element's total width and height */
+/*        height: 100px; /* Default height for cells on desktop */
+        padding: 4%; /* Add internal padding to simulate spacing */
+        width: calc(100% / 6); /* Simpler width calculation now that spacing is handled by padding */
+        text-align: center;
+        vertical-align: middle;
+        font-size:clamp(.1rem, 5vw, 2.5rem); /* Default font size for desktop cells */
+        font-weight: bold;
+        color: #2d3748;
+        cursor: pointer;
+        box-sizing: border-box;
+        position: relative; /* Needed for absolutely positioned image in grouped-cell */
     }
-
-    /* Remove the padding-top trick from TD, let the inner div manage content/size */
-    .master-table td::before {
-        content: none; /* Remove the pseudo-element */
-    }
-
-    /* ---- REVISED STYLES FOR THE INNER DIV ---- */
-    .master-table td > div {
-        position: absolute; /* Position relative to its parent TD */
-        top: 2px; /* Small offset for border appearance */
-        left: 2px;
-        right: 2px;
-        bottom: 2px;
-        border-radius: 50%; /* Keep it round inside the cell */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        /* Calculate size based on min of width/height of the TD, maintaining aspect ratio */
-        min-width: 0;
-        min-height: 0; /* Allow div to shrink */
-
-        /* Font size needs to scale to fit within this dynamically sized div */
-        font-size: clamp(.1rem, 3.5vw, 2rem);
-        /* Ensure the div itself is square within the bounds of the TD */
-        aspect-ratio: 1 / 1; /* Makes the div square */
-        margin: auto; /* Center the square div in the td */
-        max-width: 90%; /* Prevent it from touching cell edges */
-        max-height: 90%; /* Prevent it from touching cell edges */
-    }
-
 
     .master-table td:not(.grouped-cell):hover {
         transform: scale(1.03);
@@ -180,52 +78,9 @@
         100% { transform: translateX(0); }
     }
 
-    /* Media query for landscape orientation */
-    @media (orientation: landscape) {
-        body {
-            padding: 0.5rem;
-            height: 100vh;
-        }
-        .big-table {
-            max-width: 95vw;
-            max-height: 95vh;
-            padding: 2pt;
-            justify-content: space-around;
-        }
-        .game-title {
-            font-size: clamp(1.2rem, 5vw, 2.5rem);
-            margin: 0.3% auto;
-        }
-        .button-container {
-            margin: 0.3% auto 0.5%;
-        }
-        .button-container button {
-            font-size: clamp(0.1rem, 2.5vw, 1.2rem);
-            padding: 0.3% 0;
-        }
-        .master-table {
-            margin-top: 0.3%;
-            /* Removed explicit max-height, let flexbox handle distribution */
-            /* The height: 100% on .master-table ensures it fills its parent */
-            /* We will control cell size directly */
-        }
-        .master-table td > div {
-            font-size: clamp(0.1rem, 2.8vw, 1.3rem); /* Smaller font size for cells in landscape */
-            /* Further restrict div size in landscape if needed, e.g., max-width/height */
-            max-width: 95%; /* Small adjustment */
-            max-height: 95%; /* Small adjustment */
-        }
-    }
-
-    /* General portrait orientation styles */
     @media (orientation: portrait) {
-        body {
-            height: 100vh;
+        body {  height: 100vh; }
         }
-        .master-table td > div {
-            font-size: clamp(.1rem, 3.5vw, 2rem);
-        }
-    }
 
 </style>
 </head>
@@ -240,58 +95,59 @@
     <button class="game-over-button" id="gameOverButton"><a href="Choice.html">GAME<br>OVER</a></button>
     </div>
     <table class="master-table" id="masterTable">
+        <tr>
+                <td id="cell-0">11</td>
+                <td id="cell-1">12</td>
+                <td id="cell-0">13</td>
+                <td id="cell-1">14</td>
+                <td id="cell-2">15</td>
+                <td id="cell-3">16</td>
+            </tr>
             <tr>
-                    <td id="cell-0"><div>11</div></td>
-                    <td id="cell-1"><div>12</div></td>
-                    <td id="cell-0"><div>13</div></td>
-                    <td id="cell-1"><div>14</div></td>
-                    <td id="cell-2"><div>15</div></td>
-                    <td id="cell-3"><div>16</div></td>
-                </tr>
-                <tr>
-                    <td id="cell-4"><div>21</div></td>
-                    <td id="cell-5"><div>22</div></td>
-                    <td id="cell-4"><div>23</div></td>
-                    <td id="cell-5"><div>24</div></td>
-                    <td id="cell-6"><div>25</div></td>
-                    <td id="cell-7"><div>26</div></td>
-                </tr>
-                <tr>
-                    <td id="cell-8"><div>31</div></td>
-                    <td id="cell-9"><div>32</div></td>
-                    <td id="cell-10"><div>33</div></td>
-                    <td id="cell-11"><div>34</div></td>
-                    <td id="cell-12"><div>35</div></td>
-                    <td id="cell-13"><div>36</div></td>
-                </tr>
-                <tr>
-                    <td id="cell-14"><div>41</div></td>
-                    <td id="cell-15"><div>42</div></td>
-                    <td id="cell-16"><div>43</div></td>
-                    <td id="cell-17"><div>44</div></td>
-                    <td id="cell-18"><div>45</div></td>
-                    <td id="cell-19"><div>46</div></td>
-                </tr>
-                <tr>
-                    <td id="cell-20"><div>51</div></td>
-                    <td id="cell-21"><div>52</div></td>
-                    <td id="cell-22"><div>53</div></td>
-                    <td id="cell-23"><div>54</div></td>
-                    <td id="cell-24"><div>55</div></td>
-                    <td id="cell-25"><div>56</div></td>
-                </tr>
-                <tr>
-                    <td id="cell-20"><div>61</div></td>
-                    <td id="cell-21"><div>62</div></td>
-                    <td id="cell-22"><div>53</div></td>
-                    <td id="cell-23"><div>64</div></td>
-                    <td id="cell-24"><div>65</div></td>
-                    <td id="cell-25"><div>66</div></td>
-                </tr>
+                <td id="cell-4">21</td>
+                <td id="cell-5">22</td>
+                <td id="cell-4">23</td>
+                <td id="cell-5">24</td>
+                <td id="cell-6">25</td>
+                <td id="cell-7">26</td>
+            </tr>
+            <tr>
+                <td id="cell-8">31</td>
+                <td id="cell-9">32</td>
+                <td id="cell-10">33</td>
+                <td id="cell-11">34</td>
+                <td id="cell-12">35</td>
+                <td id="cell-13">36</td>
+            </tr>
+            <tr>
+                <td id="cell-14">41</td>
+                <td id="cell-15">42</td>
+                <td id="cell-16">43</td>
+                <td id="cell-17">44</td>
+                <td id="cell-18">45</td>
+                <td id="cell-19">46</td>
+            </tr>
+            <tr>
+                <td id="cell-20">51</td>
+                <td id="cell-21">52</td>
+                <td id="cell-22">53</td>
+                <td id="cell-23">54</td>
+                <td id="cell-24">55</td>
+                <td id="cell-25">56</td>
+            </tr>
+            <tr>
+                <td id="cell-20">61</td>
+                <td id="cell-21">62</td>
+                <td id="cell-22">53</td>
+                <td id="cell-23">64</td>
+                <td id="cell-24">65</td>
+                <td id="cell-25">66</td>
+            </tr>
         </table>
 </div>
 
 <script>
+
 document.getElementById('fullScreenButton').addEventListener('click', () => {
     if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen().catch(err => {
@@ -301,7 +157,9 @@ document.getElementById('fullScreenButton').addEventListener('click', () => {
         document.exitFullscreen();
     }
 });
+    
 </script>
 
+    
 </body>
 </html>
