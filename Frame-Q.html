@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GAME-2</title>
+    <title>Gem-3</title>
 
 <style>
     body {
@@ -34,7 +34,6 @@
         background-color: #eee716;
         text-align: center;
         padding: 5pt;
-        /* Remove explicit height to allow flexbox to manage it */
         height: auto; /* Let content define height initially */
         flex-grow: 1; /* Allow it to grow to fill body space */
         flex-shrink: 1; /* Allow it to shrink if needed */
@@ -82,30 +81,28 @@
         margin-top: 1%;
         border: 10px outset blue;
         table-layout: fixed;
-        /* New: Allow master-table to grow and shrink within big-table */
         flex-grow: 1;
         flex-shrink: 1;
-        overflow: auto; /* Add scroll if content is too large, as a fallback */
-        min-height: 0; /* Essential for flex items to shrink below their content size */
-        /* Set a max-height relative to its flex container (big-table) */
-        max-height: 70%; /* Adjust this percentage based on how much space title/buttons take */
+        /* overflow: auto; -- Removed for now, let's try to fit without scroll */
+        min-height: 0;
+        /* This max-height needs to be very carefully calibrated with other elements */
+        max-height: 70%; /* This percentage is relative to big-table's height */
     }
     .master-table td {
         border: 4px solid #a0aec0;
         border-radius: 50%;
         background-color: white;
-        padding: 0.5%;
-        width: calc(100% / 6);
+        /* --- CRUCIAL CHANGE HERE: Adjust padding --- */
+        /* Use a combination of vw (viewport width) and a fixed minimum for padding */
+        padding: 0.5vmin; /* Use smallest of viewport width/height for responsive padding */
+        width: calc(100% / 6); /* Still ensures 6 columns */
         text-align: center;
         vertical-align: middle;
-        font-size:clamp(.1rem, 4vw, 2.5rem);
         font-weight: bold;
         color: #2d3748;
         cursor: pointer;
         box-sizing: border-box;
         position: relative;
-        /* Remove explicit min-height here, let the padding-top create the height */
-        /* min-height: 50px; */
     }
     /* Make cells square-like using padding-bottom trick for aspect ratio */
     .master-table td::before {
@@ -122,6 +119,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        /* --- CRUCIAL CHANGE HERE: Adjust font size of the content DIV --- */
+        font-size: clamp(.1rem, 3.5vw, 2rem); /* Slightly more aggressive clamping for content */
     }
 
 
@@ -151,46 +150,43 @@
         100% { transform: translateX(0); }
     }
 
-    /* Media query for landscape orientation on devices with max-height of 800px (iPad height is 1640 in portrait, 2360 in landscape - so landscape height is 1640. max-height 800px captures smaller tablets/phones, but we can refine) */
-    /* For iPad 2360x1640, in landscape it's 2360 (width) x 1640 (height).
-       So, `max-height: 1650px` or a larger value would still apply to iPad landscape.
-       Let's target smaller heights if we want more aggressive scaling for smaller landscape screens.
-       For a 2360x1640 iPad, it's the *width* that's large in landscape, and *height* that's smaller.
-       We should target the *actual height* of the iPad in landscape.
-       Let's use `max-height: 1640px` or just `orientation: landscape` if general landscape adjustments are enough.
-    */
+    /* Media query for landscape orientation */
     @media (orientation: landscape) {
         body {
-            padding: 0.5rem; /* Reduce overall padding */
-            /* Ensure body is a flex container for big-table to center correctly */
-            height: 100vh; /* Ensure body takes full viewport height in landscape too */
+            padding: 0.5rem;
+            height: 100vh;
         }
         .big-table {
-            max-width: 95vw; /* Allow it to take more width, relative to viewport width */
+            max-width: 95vw;
             max-height: 95vh; /* Crucial: Limit big-table height to viewport height */
-            padding: 5pt; /* Keep padding consistent or adjust as needed */
-            /* Do not set a fixed height here, let flex-grow and max-height manage it */
-            height: auto; /* Reset explicit height */
+            padding: 2pt; /* Reduce padding for big-table itself */
+            height: auto;
+            /* Adjust justify-content to optimize vertical space distribution in landscape */
+            justify-content: space-around; /* Distribute space more evenly */
         }
         .game-title {
-            font-size: clamp(1.5rem, 6vw, 3rem); /* Smaller font size for title */
-            margin: 0.5% auto;
+            font-size: clamp(1.2rem, 5vw, 2.5rem); /* Even smaller font for title in landscape */
+            margin: 0.3% auto;
         }
         .button-container {
-            margin: 0 auto 0.5%; /* Reduce bottom margin */
+            margin: 0.3% auto 0.5%; /* Reduce margins further */
         }
         .button-container button {
-            font-size: clamp(0.1rem, 3vw, 1.5rem); /* Smaller font size for buttons */
-            padding: 0.5% 0; /* Reduce padding on buttons */
+            font-size: clamp(0.1rem, 2.5vw, 1.2rem); /* Even smaller button font */
+            padding: 0.3% 0; /* Reduce padding on buttons */
         }
         .master-table {
-            margin-top: 0.5%; /* Reduce top margin for the table */
-            max-height: 70%; /* Keep this, but it will be relative to big-table's calculated height */
-            /* Adjust cell font size specifically for landscape if needed */
-            font-size: clamp(0.1rem, 2.5vw, 1.5rem); /* Slightly smaller font for cells in landscape */
+            margin-top: 0.3%;
+            /* Try reducing max-height slightly if still overflowing, e.g., to 65% or 60% */
+            max-height: 68%; /* Adjusted slightly for more room, find sweet spot */
         }
         .master-table td {
-            padding: 0.2%; /* Further reduce padding for cells to maximize space */
+            /* --- CRUCIAL CHANGE HERE: Landscape specific padding for TD --- */
+            padding: 0.3vmin; /* Very small padding in landscape, relies on inner div */
+        }
+        .master-table td > div {
+            /* --- CRUCIAL CHANGE HERE: Landscape specific font size for content DIV --- */
+            font-size: clamp(0.1rem, 2.8vw, 1.3rem); /* Smaller font size for cells in landscape */
         }
     }
 
@@ -198,6 +194,12 @@
     @media (orientation: portrait) {
         body {
             height: 100vh;
+        }
+        .master-table td {
+            padding: 0.5vmin; /* Use same vmin for portrait for consistency */
+        }
+        .master-table td > div {
+            font-size: clamp(.1rem, 3.5vw, 2rem);
         }
     }
 
@@ -242,7 +244,7 @@
                     <td id="cell-14"><div>41</div></td>
                     <td id="cell-15"><div>42</div></td>
                     <td id="cell-16"><div>43</div></td>
-                    <td id="cell-17"><div>44</td>
+                    <td id="cell-17"><div>44</div></td>
                     <td id="cell-18"><div>45</div></td>
                     <td id="cell-19"><div>46</div></td>
                 </tr>
