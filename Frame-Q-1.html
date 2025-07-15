@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRAME-5</title>
+
+<style>
+
+
+    body {
+        font-family: 'Times';
+        color: blue;
+/*        font-size: 60pt; */
+        font-weight: bold;
+        background-color: #1638ee;
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* Center content vertically */
+        align-items: center;
+        max-height: 100vh;
+        margin: 0;
+        padding: 1rem;
+        box-sizing: border-box;
+    }
+
+    .big-table { width:98%; max-width: 750px; min-width:300px; display: flex; flex-direction: column; align-content: space-between; align-items: center; margin: 0 auto; border: 10px outset orange; background-color: #eee716; text-align:center; padding: 5pt; }
+    .game-title { width:98%; border: 0px solid black; font-size:clamp(2rem, 8vw, 5rem); line-height: 0; margin: 1% auto;}
+    .button-container { width:98%; border: 0px solid black; margin:0 auto 1%; display: flex;
+        flex-direction: row; justify-content: space-around;}
+    .button-container button { width:25%; font-size:clamp(.1rem, 5vw, 2rem); font-family:'Times'; font-weight: 1000; color: #01056e; padding: 1% 0; border: 7px outset; border-radius: 25%; border-color: grey; cursor: pointer; transition: background-color 0.3s ease, transform 0.2s ease; box-shadow: 0 5px 10px #00000033; margin: 0; outline: none; }
+    .button-container a { text-decoration: none;  color: #01056e}
+    .full-screen-button { background-color:#c2b3ee }
+    .new-game-button { background-color:#93fcb3 }
+    .game-over-button { background-color:#fcbb93 }
+
+    .master-table { width:100%; margin-top:1%; border: 10px outset blue; }
+    .master-table td {
+        border: 4px solid #a0aec0;
+        border-radius: 50%;
+        background-color: white;
+/*        height: 100px; /* Default height for cells on desktop */
+        padding: 4%; /* Add internal padding to simulate spacing */
+        width: calc(100% / 6); /* Simpler width calculation now that spacing is handled by padding */
+        text-align: center;
+        vertical-align: middle;
+        font-size:clamp(.1rem, 5vw, 2.5rem); /* Default font size for desktop cells */
+        font-weight: bold;
+        color: #2d3748;
+        cursor: pointer;
+        box-sizing: border-box;
+        position: relative; /* Needed for absolutely positioned image in grouped-cell */
+    }
+
+    .master-table td:not(.grouped-cell):hover {
+        transform: scale(1.03);
+    }
+
+    /* Styling for correctly guessed cells (light green) */
+    .master-table td.correct {
+        background-color: #9ae6b4; /* Light green */
+        pointer-events: none; /* Disable further clicks on correct cells */
+        cursor: default;
+    }
+
+    /* Styling for incorrectly guessed cells (red) */
+    .master-table td.incorrect {
+        background-color: #fc8181; /* Red */
+        animation: shake 0.5s ease-out;
+    }
+
+    /* Keyframe animation for shake effect */
+    @keyframes shake {
+        0% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        50% { transform: translateX(5px); }
+        75% { transform: translateX(-5px); }
+        100% { transform: translateX(0); }
+    }
+
+    @media (orientation: portrait) {
+        body {  height: 100vh; }
+        }
+
+</style>
+</head>
+
+<body>
+
+<div class="big-table" id="bigTable">
+    <div class="game-title" id="gameTitle"><ul>Find the ABCs!</ul></div>
+    <div class="button-container" id="buttonContainer">
+    <button class="full-screen-button" id="fullScreenButton">FULL<br>SCREEN</button>
+    <button class="new-game-button" id="newGameButton">NEW<br>GAME</button>
+    <button class="game-over-button" id="gameOverButton"><a href="Choice.html">GAME<br>OVER</a></button>
+    </div>
+    <table class="master-table" id="masterTable">
+
+
+            <tr>
+                <td id="cell-0">Cell 11</td>
+                <td id="cell-1">Cell 12</td>
+                <td class="grouped-cell" colspan="2" rowspan="2">
+                    <!-- Updated image src to match gameData path -->
+                    <img id="targetImage" src="3D.png" alt="Target Image">
+                </td>
+                <td id="cell-2">Cell 15</td>
+                <td id="cell-3">Cell 16</td>
+            </tr>
+           <tr>
+                <td id="cell-4">Cell 21</td>
+                <td id="cell-5">Cell 22</td>
+                <td id="cell-6">Cell 25</td>
+                <td id="cell-7">Cell 26</td>
+            </tr>
+            <tr>
+                <td id="cell-8">Cell 31</td>
+                <td id="cell-9">Cell 32</td>
+                <td id="cell-10">Cell 33</td>
+                <td id="cell-11">Cell 34</td>
+                <td id="cell-12">Cell 35</td>
+                <td id="cell-13">Cell 36</td>
+            </tr>
+            <tr>
+                <td id="cell-14">Cell 41</td>
+                <td id="cell-15">Cell 42</td>
+                <td id="cell-16">Cell 43</td>
+                <td id="cell-17">Cell 44</td>
+                <td id="cell-18">Cell 45</td>
+                <td id="cell-19">Cell 46</td>
+            </tr>
+            <tr>
+                <td id="cell-20">Cell 51</td>
+                <td id="cell-21">Cell 52</td>
+                <td id="cell-22">Cell 53</td>
+                <td id="cell-23">Cell 54</td>
+                <td id="cell-24">Cell 55</td>
+                <td id="cell-25">Cell 56</td>
+
+            </tr>
+    </table>                 
+</div>
+
+<script>
+    // This array serves as your "DataBase table" (invisible).
+    // Each object contains the letter, a descriptive word, and the correct local image path.
+    // Ensure your 'IMAGES' sub-folder exists in the same directory as this HTML file,
+    // and contains all these .png files with exact names and capitalization.
+    const gameData = [
+        { letter: "A", word: "Apple", image: "APPLE.png" },
+        { letter: "B", word: "Banana", image: "BANANA.png" },
+        { letter: "C", word: "Cat", image: "CAT.png" },
+        { letter: "D", word: "Dog", image: "DOG.png" },
+        { letter: "E", word: "Elephant", image: "ELEPHANT.png" },
+        { letter: "F", word: "Fish", image: "FISH.png" },
+        { letter: "G", word: "Grapes", image: "GRAPES.png" },
+        { letter: "H", word: "House", image: "HOUSE.png" },
+        { letter: "I", word: "IceCream", image: "ICECREAM.png" },
+        { letter: "J", word: "Jellyfish", image: "JELLYFISH.png" },
+        { letter: "K", word: "Key", image: "KEY.png" },
+        { letter: "L", word: "Lemon", image: "LEMON.png" },
+        { letter: "M", word: "Monkey", image: "MONKEY.png" },
+        { letter: "N", word: "Napkins", image: "NAPKINS.png" },
+        { letter: "O", word: "Orange", image: "ORANGE.png" },
+        { letter: "P", word: "Pencil", image: "PENCIL.png" },
+        { letter: "Q", word: "Quill", image: "QUILL.png" },
+        { letter: "R", word: "Rabbit", image: "RABBIT.png" },
+        { letter: "S", word: "Star", image: "STAR.png" },
+        { letter: "T", word: "Tree", image: "TREE.png" },
+        { letter: "U", word: "Umbrella", image: "UMBRELLA.png" },
+        { letter: "V", word: "Vacuum", image: "VACUUM.png" },
+        { letter: "W", word: "Wheel", image: "WHEEL.png" },
+        { letter: "X", word: "Xylophone", image: "XYLOPHONE.png" },
+        { letter: "Y", word: "Yogurt", image: "YOGURT.png" },
+        { letter: "Z", word: "Zebra", image: "ZEBRA.png" },
+        { letter: "3D", word: "3D", image: "3D.png" }
+ // Local path for 3D image
+    ];
+
+    // Get references to DOM elements
+    const gameTitle = document.getElementById('gameTitle');
+    const masterCells = [];
+    // Populate the masterCells array with references to all 26 letter cells
+    for (let i = 0; i < 26; i++) {
+        masterCells.push(document.getElementById(`cell-${i}`));
+    }
+    const targetImage = document.getElementById('targetImage'); // The image in the "Class X" cell
+    const newGameButton = document.getElementById('newGameButton');
+    const fullScreenButton = document.getElementById('fullScreenButton'); // Get the full screen button
+    const gameOverButton = document.getElementById('gameOverButton'); // Get the game over button
+
+
+    // Game state variables
+    let currentRoundTarget = null; // Stores the current letter/image the player needs to find
+    let correctlyGuessedLetters = new Set(); // Stores the letters that have been correctly found in the current game session
+    let isGameActive = false; // Flag to indicate if the game is currently in progress
+
+    /**
+     * Shuffles an array in place using the Fisher-Yates algorithm.
+     * This ensures the letters are randomly distributed in the game board.
+     * @param {Array} array - The array to shuffle.
+     */
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            // Swap elements
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    /**
+     * Initializes or restarts the game.
+     * This function is called when the page loads and when the "NEW GAME" button is clicked.
+     * It resets the game state, shuffles the letters, and sets up the first round.
+     */
+    function initializeGame() {
+        gameTitle.textContent = "Find the ABCs!"; // Reset title
+        correctlyGuessedLetters.clear(); // Clear all previously guessed letters
+        isGameActive = true; // Set game to active
+        newGameButton.disabled = false; // Ensure the new game button is enabled
+        gameOverButton.disabled = false; // Ensure game over button is enabled
+
+        // Shuffle and display letters in the master table cells
+        shuffleAndDisplayLetters();
+        // Start the very first round of the game
+        startNewRound();
+    }
+
+    /**
+     * Shuffles the letters (A-Z) and displays them in the 26 master table cells.
+     * It also resets the visual state of all cells.
+     */
+    function shuffleAndDisplayLetters() {
+        // Extract only the letters from the gameData for shuffling
+        // Exclude the '3D' entry from the letters to be placed in cells
+        const letters = gameData.filter(data => data.letter !== "3D").map(data => data.letter);
+        shuffleArray(letters); // Randomize the order of letters
+
+        // Assign shuffled letters to cells and reset their styles
+        masterCells.forEach((cell, index) => {
+            cell.textContent = letters[index]; // Place the shuffled letter in the cell
+            cell.classList.remove('correct', 'incorrect'); // Remove any previous color classes
+            cell.style.pointerEvents = 'auto'; // Re-enable clicks on cells
+            cell.onclick = handleCellClick; // Re-attach the click event listener
+        });
+    }
+
+    /**
+     * Starts a new round of the game.
+     * It picks a random letter that has not yet been correctly guessed as the new target.
+     * Updates the target image in the "Class X" cell.
+     * If all letters are found, it triggers the game win condition.
+     */
+    function startNewRound() {
+        // Check if all letters have been found. If so, end the game.
+        // gameData.length - 1 because '3D' is not a letter to find in the cells
+        if (correctlyGuessedLetters.size === gameData.length - 1) {
+            endGameWin();
+            return;
+        }
+
+        // Filter out letters that have already been correctly guessed in this session, and exclude '3D'
+        const remainingLetters = gameData.filter(
+            data => !correctlyGuessedLetters.has(data.letter) && data.letter !== "3D"
+        );
+
+        // If for some reason there are no remaining letters but the above check failed (shouldn't happen)
+        if (remainingLetters.length === 0) {
+            endGameWin();
+            return;
+        }
+
+        // Pick a random letter from the remaining, un-guessed letters
+        const randomIndex = Math.floor(Math.random() * remainingLetters.length);
+        currentRoundTarget = remainingLetters[randomIndex]; // Set the new target
+
+        // Update the source and alt text of the target image in the "Class X" cell
+        targetImage.src = currentRoundTarget.image;
+        targetImage.alt = `Find ${currentRoundTarget.letter}`;
+    }
+
+    /**
+     * Handles the click event on any of the 26 letter cells.
+     * It checks if the clicked letter matches the current target letter.
+     * @param {Event} event - The click event object.
+     */
+    function handleCellClick(event) {
+        // If the game is not active, do nothing
+        if (!isGameActive) return;
+
+        const clickedCell = event.target;
+        const clickedLetter = clickedCell.textContent; // Get the letter from the clicked cell
+
+        // Check if the clicked letter matches the current target letter
+        if (clickedLetter === currentRoundTarget.letter) {
+            // Correct guess:
+            clickedCell.classList.add('correct'); // Apply light green background
+            clickedCell.classList.remove('incorrect'); // Ensure red class is removed
+            correctlyGuessedLetters.add(clickedLetter); // Add the letter to the set of found letters
+            startNewRound(); // Immediately start a new round to find the next letter
+        } else {
+            // Incorrect guess:
+            clickedCell.classList.add('incorrect'); // Apply red background
+            // Remove the red background after 1 second
+            setTimeout(() => {
+                clickedCell.classList.remove('incorrect');
+            }, 1000);
+        }
+    }
+
+    /**
+     * Ends the game when all letters have been successfully found.
+     * Updates the game title to "You Won!!!" and disables further interaction.
+     */
+    function endGameWin() {
+        gameTitle.textContent = "You Won!!!"; // Change title to victory message
+        isGameActive = false; // Set game to inactive
+        newGameButton.disabled = false; // Ensure the new game button is enabled for replay
+        gameOverButton.disabled = true; // Disable game over button when won
+
+        // Disable clicks on all cells to prevent further interaction after winning
+        masterCells.forEach(cell => {
+            cell.style.pointerEvents = 'none'; // Disable pointer events
+            cell.onclick = null; // Remove the click event listener
+        });
+    }
+
+    /**
+     * Handles the "GAME OVER" action.
+     * Updates the game title and disables further interaction.
+     */
+    function endGame() {
+        gameTitle.textContent = "Game Over!"; // Change title to game over message
+        isGameActive = false; // Set game to inactive
+        newGameButton.disabled = false; // Ensure new game button is enabled for replay
+        gameOverButton.disabled = true; // Disable game over button
+
+        // Disable clicks on all cells
+        masterCells.forEach(cell => {
+            cell.style.pointerEvents = 'none'; // Disable pointer events
+            cell.onclick = null; // Remove the click event listener
+        });
+    }
+
+
+    // Event listener for the "NEW GAME" button
+    newGameButton.addEventListener('click', initializeGame);
+
+    // Event listener for the "GAME OVER" button
+    gameOverButton.addEventListener('click', endGame);
+
+    // Event listener for the "FULL SCREEN" button
+    if (fullScreenButton) {
+        fullScreenButton.addEventListener('click', () => {
+            // Check if full screen is even enabled by the browser/environment
+            if (!document.fullscreenEnabled) {
+                console.warn("Full-screen mode is not enabled or allowed by this browser/environment.");
+                alert("Full-screen mode is currently restricted by your browser or the embedding environment (e.g., an iframe). Please check your browser settings or ensure the page is opened directly, not embedded.");
+                return; // Exit the function if not enabled
+            }
+
+            if (!document.fullscreenElement) {
+                // If not in full-screen, request full-screen for the whole document
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+                    if (err.name === 'NotAllowedError' || err.name === 'SecurityError') {
+                        alert("Full-screen mode could not be activated. This is often due to browser security policies or if the page is embedded in an iframe without the 'allowfullscreen' attribute.");
+                    } else {
+                        alert("Full-screen mode could not be activated due to an unexpected error.");
+                    }
+                });
+            } else {
+                // If in full-screen, exit full-screen
+                document.exitFullscreen().catch(err => {
+                    console.error(`Error attempting to exit full-screen mode: ${err.message} (${err.name})`);
+                    alert("Error exiting full-screen mode.");
+                });
+            }
+        });
+    }
+
+    // Initialize the game when the DOM content has loaded
+    document.addEventListener('DOMContentLoaded', initializeGame);
+</script>
+</body>
+</html>
