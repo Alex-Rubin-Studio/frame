@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FRAME-Gem</title>
+    <title>GAME-2</title>
 
 <style>
     body {
@@ -15,7 +15,7 @@
         flex-direction: column;
         justify-content: center; /* Center content vertically */
         align-items: center;
-        min-height: 100vh; /* Use min-height to allow content to expand if needed */
+        min-height: 100vh; /* Ensure body takes full viewport height */
         margin: 0;
         padding: 1rem;
         box-sizing: border-box;
@@ -26,33 +26,35 @@
         max-width: 750px;
         min-width: 300px;
         display: flex;
-        flex-direction: column;
-        align-content: space-between;
+        flex-direction: column; /* This is crucial for vertical stacking */
+        justify-content: space-between; /* Distribute space among children */
         align-items: center;
         margin: 0 auto;
         border: 10px outset orange;
         background-color: #eee716;
         text-align: center;
         padding: 5pt;
-        /* Ensure the big-table can shrink to fit vertical space if needed */
-        height: auto;
-        flex-shrink: 1; /* Allow the table to shrink */
+        /* Remove explicit height to allow flexbox to manage it */
+        height: auto; /* Let content define height initially */
+        flex-grow: 1; /* Allow it to grow to fill body space */
+        flex-shrink: 1; /* Allow it to shrink if needed */
+        min-height: 0; /* Important for flex items to shrink correctly */
     }
 
     .game-title {
         width: 98%;
-        border: 0px solid black;
         font-size:clamp(2rem, 8vw, 5rem);
         line-height: 0;
         margin: 1% auto;
+        flex-shrink: 0; /* Prevent title from shrinking */
     }
     .button-container {
         width: 98%;
-        border: 0px solid black;
         margin:0 auto 1%;
         display: flex;
         flex-direction: row;
         justify-content: space-around;
+        flex-shrink: 0; /* Prevent buttons from shrinking */
     }
     .button-container button {
         width: 25%;
@@ -79,25 +81,31 @@
         width: 100%;
         margin-top: 1%;
         border: 10px outset blue;
-        /* Ensure table can fit within its container */
-        table-layout: fixed; /* Helps in consistent column widths */
+        table-layout: fixed;
+        /* New: Allow master-table to grow and shrink within big-table */
+        flex-grow: 1;
+        flex-shrink: 1;
+        overflow: auto; /* Add scroll if content is too large, as a fallback */
+        min-height: 0; /* Essential for flex items to shrink below their content size */
+        /* Set a max-height relative to its flex container (big-table) */
+        max-height: 70%; /* Adjust this percentage based on how much space title/buttons take */
     }
     .master-table td {
         border: 4px solid #a0aec0;
         border-radius: 50%;
         background-color: white;
-        padding: 0.5%; /* Reduce padding to make cells smaller, will adjust further in media queries */
+        padding: 0.5%;
         width: calc(100% / 6);
         text-align: center;
         vertical-align: middle;
-        font-size:clamp(.1rem, 4vw, 2.5rem); /* Slightly adjust font clamp values */
+        font-size:clamp(.1rem, 4vw, 2.5rem);
         font-weight: bold;
         color: #2d3748;
         cursor: pointer;
         box-sizing: border-box;
         position: relative;
-        /* Add a min-height to ensure cells don't collapse too much */
-        min-height: 50px; /* Adjust as needed */
+        /* Remove explicit min-height here, let the padding-top create the height */
+        /* min-height: 50px; */
     }
     /* Make cells square-like using padding-bottom trick for aspect ratio */
     .master-table td::before {
@@ -105,7 +113,7 @@
         display: block;
         padding-top: 100%; /* Makes the height equal to the width */
     }
-    .master-table td > * {
+    .master-table td > div { /* Target the div directly for content */
         position: absolute;
         top: 0;
         left: 0;
@@ -143,16 +151,26 @@
         100% { transform: translateX(0); }
     }
 
-    /* Media query for landscape orientation on devices with max-height of 800px (common for tablets in landscape) */
-    @media (orientation: landscape) and (max-height: 800px) {
+    /* Media query for landscape orientation on devices with max-height of 800px (iPad height is 1640 in portrait, 2360 in landscape - so landscape height is 1640. max-height 800px captures smaller tablets/phones, but we can refine) */
+    /* For iPad 2360x1640, in landscape it's 2360 (width) x 1640 (height).
+       So, `max-height: 1650px` or a larger value would still apply to iPad landscape.
+       Let's target smaller heights if we want more aggressive scaling for smaller landscape screens.
+       For a 2360x1640 iPad, it's the *width* that's large in landscape, and *height* that's smaller.
+       We should target the *actual height* of the iPad in landscape.
+       Let's use `max-height: 1640px` or just `orientation: landscape` if general landscape adjustments are enough.
+    */
+    @media (orientation: landscape) {
         body {
             padding: 0.5rem; /* Reduce overall padding */
+            /* Ensure body is a flex container for big-table to center correctly */
+            height: 100vh; /* Ensure body takes full viewport height in landscape too */
         }
         .big-table {
-            max-width: 95%; /* Allow it to take more width */
-            padding: 2pt; /* Reduce padding inside the big table */
-            height: 95vh; /* Try to make it fit 95% of the viewport height */
-            justify-content: space-around; /* Distribute space more evenly */
+            max-width: 95vw; /* Allow it to take more width, relative to viewport width */
+            max-height: 95vh; /* Crucial: Limit big-table height to viewport height */
+            padding: 5pt; /* Keep padding consistent or adjust as needed */
+            /* Do not set a fixed height here, let flex-grow and max-height manage it */
+            height: auto; /* Reset explicit height */
         }
         .game-title {
             font-size: clamp(1.5rem, 6vw, 3rem); /* Smaller font size for title */
@@ -167,11 +185,12 @@
         }
         .master-table {
             margin-top: 0.5%; /* Reduce top margin for the table */
+            max-height: 70%; /* Keep this, but it will be relative to big-table's calculated height */
+            /* Adjust cell font size specifically for landscape if needed */
+            font-size: clamp(0.1rem, 2.5vw, 1.5rem); /* Slightly smaller font for cells in landscape */
         }
         .master-table td {
-            font-size: clamp(0.1rem, 3vw, 1.5rem); /* Smaller font size for cells */
-            padding: 0.2%; /* Further reduce padding for cells */
-            min-height: 30px; /* Adjust minimum height if needed */
+            padding: 0.2%; /* Further reduce padding for cells to maximize space */
         }
     }
 
@@ -223,7 +242,7 @@
                     <td id="cell-14"><div>41</div></td>
                     <td id="cell-15"><div>42</div></td>
                     <td id="cell-16"><div>43</div></td>
-                    <td id="cell-17"><div>44</div></td>
+                    <td id="cell-17"><div>44</td>
                     <td id="cell-18"><div>45</div></td>
                     <td id="cell-19"><div>46</div></td>
                 </tr>
