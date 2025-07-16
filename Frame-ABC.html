@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ABC-FRAME</title>
+    <title>ABC-FRAME-1</title>
 
 <style>
 
@@ -92,6 +92,34 @@
     @media (orientation: portrait) {
         body {  height: 100vh; }
         }
+    @media (orientation: landscape) {
+    body {
+        /* Optionally reduce vertical height usage */
+        height: 100vh;
+        padding: 0.5rem;
+    }
+    .big-table {
+        /* Downscale max-width for landscape, e.g., 90vw or 600px */
+        max-width: 90vw;
+        min-width: 200px;
+        /* Optionally scale down font size for all content */
+        font-size: 0.85em;
+    }
+    .game-title {
+        font-size: clamp(1.5rem, 5vw, 3rem);
+    }
+    .button-container button {
+        font-size: clamp(.1rem, 3vw, 1.2rem);
+    }
+    .master-table td {
+        font-size: clamp(.1rem, 3vw, 1.4rem);
+        padding: 2%;
+    }
+    .grouped-cell img {
+        width: 60%;
+        height: 60%;
+    }
+}
 
 </style>
 </head>
