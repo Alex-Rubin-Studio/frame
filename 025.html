@@ -110,6 +110,26 @@
     .master-table td { font-size: clamp(0.7rem, 8vw, 1.5rem);}
     .big-table { margin-top: 1vw; }
   }
+   /* Responsive adjustments for landscape orientation */
+  @media (orientation: landscape) and (max-height: 800px) {
+  .game-title {
+    font-size: clamp(1rem, 5vh, 3rem);
+    margin: 0.5rem auto;
+  }
+  .big-table {
+    margin: 1rem auto;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .master-table td {
+    font-size: clamp(0.8rem, 6vh, 1.5rem);
+    padding: 0.3em;
+  }
+  .button-container button {
+    font-size: clamp(0.8rem, 4vh, 1.2rem);
+    padding: 0.3em 0;
+  }
+}
 </style>
 </head>
 <body>
