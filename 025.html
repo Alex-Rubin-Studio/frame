@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ABC-GAME</title>
+<style>
+  body {
+    font-family: 'Times', Times, serif;
+    color: blue;
+    font-weight: bold;
+    background-color: #1638ee;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* NO flexbox, NO height */
+  }
+  .big-table {
+    width: 98vw;
+    max-width: 750px;
+    min-width: 300px;
+    margin: 2rem auto;
+    background: #fff2e1;
+    border: 10px outset orange;
+    /* NO flexbox here */
+  }
+  .game-title {
+    width: 98%;
+    border: 1px solid black;
+    font-size: clamp(2rem, 8vw, 5rem);
+    line-height: 1.1;
+    text-align: center;
+    margin: 1rem auto;
+  }
+  .button-container {
+    width: 98%;
+    border: 1px solid black;
+    margin: 0 auto 1rem auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 1vw;
+  }
+  .button-container button {
+    width: 25%;
+    font-size: clamp(1rem, 5vw, 2rem);
+    font-family: 'Times', Times, serif;
+    font-weight: 1000;
+    color: #01056e;
+    padding: 0.5em 0;
+    border: 7px outset;
+    border-radius: 25%;
+    border-color: #fff2e1;
+    background: #c2b3ee;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: background 0.2s;
+  }
+  .new-game-button { background: #93fcb3; }
+  .game-over-button { background: #fcbb93; }
+  .button-container a { text-decoration: none; color: #01056e }
+
+  .master-table {
+    width: 100%;
+    margin-top: 1rem;
+    border: 10px outset blue;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed; /* THIS makes all cells same width */
+    background: white;
+  }
+  .master-table td {
+    border: 4px solid #a0aec0;
+    background: white;
+    padding: 0.5em;
+    /* FIXED width from table-layout: fixed */
+    text-align: center;
+    vertical-align: middle;
+    font-size: clamp(0.8rem, 5vw, 2.5rem);
+    font-weight: bold;
+    color: #2d3748;
+    cursor: pointer;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    word-break: break-word;
+  }
+  .master-table td:not(.grouped-cell) { border-radius: 50%; }
+  .grouped-cell { border-radius: 20%; }
+  .grouped-cell img {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%; height: 80%;
+    object-fit: contain;
+  }
+  .master-table td:not(.grouped-cell):hover { transform: scale(1.03);}
+  .master-table td.correct { background-color: #9ae6b4; pointer-events: none; cursor: default;}
+  .master-table td.incorrect { background-color: #fc8181; animation: shake 0.5s ease-out;}
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+  }
+  /* Responsive adjustments for small screens */
+  @media (max-width: 800px) {
+    .game-title { font-size: clamp(1.5rem, 10vw, 3rem);}
+    .master-table td { font-size: clamp(0.7rem, 8vw, 1.5rem);}
+    .big-table { margin-top: 1vw; }
+  }
+</style>
+</head>
+<body>
+<div class="big-table" id="bigTable">
+  <div class="game-title" id="gameTitle"><ul>Find the ABCs!</ul></div>
+  <div class="button-container" id="buttonContainer">
+    <button class="full-screen-button" id="fullScreenButton">FULL<br>SCREEN</button>
+    <button class="new-game-button" id="newGameButton">NEW<br>GAME</button>
+    <button class="game-over-button" id="gameOverButton"><a href="Choice.html">GAME<br>OVER</a></button>
+  </div>
+  <table class="master-table" id="masterTable">
+    <tr>
+      <td id="cell-0">11</td>
+      <td id="cell-1">12</td>
+      <td class="grouped-cell" id="groupedCell" colspan="2" rowspan="2"><img id="targetImage" src="3D.png" alt="Target Image"></td>
+      <td id="cell-2">15</td>
+      <td id="cell-3">16</td>
+    </tr>
+    <tr>
+      <td id="cell-4">21</td>
+      <td id="cell-5">22</td>
+      <td id="cell-6">25</td>
+      <td id="cell-7">26</td>
+    </tr>
+    <tr>
+      <td id="cell-8">31</td>
+      <td id="cell-9">32</td>
+      <td id="cell-10">33</td>
+      <td id="cell-11">34</td>
+      <td id="cell-12">35</td>
+      <td id="cell-13">36</td>
+    </tr>
+    <tr>
+      <td id="cell-14">41</td>
+      <td id="cell-15">42</td>
+      <td id="cell-16">43</td>
+      <td id="cell-17">44</td>
+      <td id="cell-18">45</td>
+      <td id="cell-19">46</td>
+    </tr>
+    <tr>
+      <td id="cell-20">51</td>
+      <td id="cell-21">52</td>
+      <td id="cell-22">53</td>
+      <td id="cell-23">54</td>
+      <td id="cell-24">55</td>
+      <td id="cell-25">56</td>
+    </tr>
+  </table>
+</div>
+<script>
+  // Full Screen Button
+  document.getElementById('fullScreenButton').addEventListener('click', () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(err => {
+        alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  });
+</script>
+</body>
+</html>
