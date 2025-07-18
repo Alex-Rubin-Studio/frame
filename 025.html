@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ABC-GAME-025</title>
+  <title>ABC-GAME-025.1</title>
 <style>
   body {
     font-family: 'Times', Times, serif;
@@ -128,6 +128,25 @@
   .button-container button {
     font-size: clamp(0.8rem, 4vh, 1.2rem);
     padding: 0.3em 0;
+  }
+}
+  @media (orientation: landscape) and (max-height: 600px) {
+  .game-title {
+    font-size: clamp(0.9rem, 4vh, 2rem);
+    margin: 0.2rem auto;
+  }
+  .big-table {
+    margin: 0.5rem auto;
+    max-height: 85vh;
+    overflow-y: auto;
+  }
+  .master-table td {
+    font-size: clamp(0.5rem, 4vh, 1rem);
+    padding: 0.2em;
+  }
+  .button-container button {
+    font-size: clamp(0.6rem, 2.5vh, 0.9rem);
+    padding: 0.15em 0;
   }
 }
 </style>
