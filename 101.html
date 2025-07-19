@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>113</title>
+    <title>114</title>
 
 <style>
 
@@ -25,7 +25,7 @@
     }
 
     .big-table { height:96vh; display: grid; flex-direction: column; align-content: space-between; align-items: center; margin: 0 auto; border: 10px outset orange; background-color: #eee716; text-align:center; padding: 5pt; }
-    .game-title { width:98%; border: 1px solid black; font-size:clamp(2rem, 8rem); line-height: 0; margin: 1% auto;}
+    .game-title { width:98%; border: 1px solid black; font-size:clamp(2rem, 4vw, 8rem); line-height: 0; margin: 1% auto;}
     .button-container { width:98%; border: 1px solid black; margin:0 auto 1%; display: flex;
         flex-direction: row; justify-content: space-around;}
     .button-container button { width:25%; font-size:clamp(.1rem, 2rem); font-family:'Times'; font-weight: 1000; color: #01056e; padding: 1% 0; border: 7px outset; border-radius: 25%; border-color: grey; cursor: pointer; transition: background-color 0.3s ease, transform 0.2s ease; box-shadow: 0 5px 10px #00000033; margin: 0; outline: none; }
@@ -42,7 +42,7 @@
         width: calc(100% / 6); /* Simpler width calculation now that spacing is handled by padding */;
         text-align: center;
         vertical-align: middle;
-        font-size:clamp(.1rem, 5rem); /* Default font size for desktop cells */
+        font-size:clamp(.1rem, 2vw, 5rem); /* Default font size for desktop cells */
         font-weight: bold;
         color: #2d3748;
         cursor: pointer;
