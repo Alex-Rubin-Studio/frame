@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Full Screen Image with Border</title>
+<style>
+  html, body {
+    display: flex;
+    height: 98%;
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically */
+    background-color: blue;
+  }
+  .big-table {
+    height: 96vh;
+    width: 96vw;
+    display: flex; /* Uses flexbox for centering */
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically */
+    padding: 10px; /* Creates the "small area" around the image */
+    box-sizing: border-box; /* Includes padding in the element's total width and height */
+    margin:2% auto 0; 
+    border: 10pt outset orange; 
+    background-color: #eee716; 
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+  <div class="big-table"></div>
+</body>
+</html>
