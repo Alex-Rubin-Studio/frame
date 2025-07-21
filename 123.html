@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Portrait Big Table</title>
+<style>
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: blue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .big-table {
+    box-sizing: border-box;
+    border: 10pt outset orange;
+    background-color: #eee716;
+    aspect-ratio: 1 / 1.75; /* Always portrait! */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: width 0.3s, height 0.3s;
+  }
+</style>
+</head>
+<body>
+  <div class="big-table"></div>
+  <script>
+    function resizeBigTable() {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const portraitRatio = 1 / 1.75;
+      const bigTable = document.querySelector('.big-table');
+      // Calculate which dimension to use so the table always fits
+      if (vw / vh < portraitRatio) {
+        // Screen is too tall, fit width
+        bigTable.style.width = vw + 'px';
+        bigTable.style.height = (vw / portraitRatio) + 'px';
+      } else {
+        // Screen is too wide, fit height
+        bigTable.style.height = vh + 'px';
+        bigTable.style.width = (vh * portraitRatio) + 'px';
+      }
+    }
+    window.addEventListener('resize', resizeBigTable);
+    window.addEventListener('DOMContentLoaded', resizeBigTable);
+  </script>
+</body>
+</html>
