@@ -16,7 +16,7 @@
     box-sizing: border-box;
     border: 10pt outset orange;
     background-color: #eee716;
-    aspect-ratio: 1 / 1.75; /* Always portrait! */
+    aspect-ratio: 1 / 1.44; /* Always portrait! */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -58,7 +58,7 @@
     function resizeBigTable() {
       const vw = window.innerWidth;
       const vh = window.innerHeight;
-      const portraitRatio = 1 / 1.75;
+      const portraitRatio = 1 / 1.44;
       const bigTable = document.querySelector('.big-table');
       // Calculate which dimension to use so the table always fits
       if (vw / vh < portraitRatio) {
