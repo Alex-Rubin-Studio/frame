@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AbcFrame-010</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link type="text/css" rel="stylesheet" href="resources/sheet.css" >
+
+<style type="text/css">
+    html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: blue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+    .big-table { 
+        box-sizing: border-box;
+        aspect-ratio: 1 / 1.45;
+        border: 10pt outset orange;
+        margin: 0 auto;
+        background-color: #e4e9ff;
+        text-align:center;
+        color:#000000;font-family:Times; font-size:5vw; font-weight: 800; line-height: 0; vertical-align:center; white-space:nowrap;direction:ltr;
+    }
+    .game-title { height: 15%;  border: 1px solid black; font-size:clamp(3.5rem, 3.75vw, 4rem); color: blue; line-height: 1.1; }
+    .button-container { height: 12%; border: 7px outset; border-radius: 15%; border-color: grey; box-shadow: 0 5px 10px #00000033; outline: none; padding:0; color: black; font-family:Arial, sans-serif; font-size:50%; font-weight: 800; text-decoration: none; }
+    #fullScreen { background-color: #ffff54; }
+    #newGame { background-color: #b6f197; }
+    #gameOver { background-color: #f1a697; }
+    .s2, .grouped-cell { width: calc(100% / 6); border:4px solid grey; border-radius: 25%; background-color:white;  line-height: 1.1; font-size:clamp(1vh, 30pt, 5vh); } 
+    .s2 { height: 12%; }
+    
+</style>
+<body>
+    <table class="big-table" cellspacing="5">
+        <tbody>
+        <tr>
+            <td class="game-title" colspan="6">Find the ABCs!</td>
+        </tr>
+            <tr>
+                <td class="button-container" id="fullScreen" colspan="2">Full Screen</td>
+                <td class="button-container" id="newGame" colspan="2">New Game</td>
+                <td class="button-container" id="gameOver" colspan="2">Game Over</td>
+            </tr>
+            <tr>
+                <td class="s2" id="cell-0">A</td>
+                <td class="s2" id="cell-1">B</td>
+                <td class="grouped-cell" id="groupedCell" colspan="2" rowspan="2"></td>
+                <td class="s2" id="cell-2">C</td>
+                <td class="s2" id="cell-3">D</td>
+            </tr>
+            <tr>
+                <td class="s2" id="cell-4">E</td>
+                <td class="s2" id="cell-5">F</td>
+                <td class="s2" id="cell-6">G</td>
+                <td class="s2" id="cell-7">H</td></tr>
+            <tr>
+                <td class="s2" id="cell-8">I</td>
+                <td class="s2" id="cell-9">J</td>
+                <td class="s2" id="cell-10">K</td>
+                <td class="s2" id="cell-11">L</td>
+                <td class="s2" id="cell-12">M</td>
+                <td class="s2" id="cell-13">N</td>
+            </tr>
+            <tr>
+                <td class="s2" id="cell-14">O</td>
+                <td class="s2" id="cell-15">P</td>
+                <td class="s2" id="cell-16">Q</td>
+                <td class="s2" id="cell-17">R</td>
+                <td class="s2" id="cell-18">S</td>
+                <td class="s2" id="cell-19">T</td>
+            </tr>
+            <tr>
+                <td class="s2" id="cell-20">U</td>
+                <td class="s2" id="cell-21">V</td>
+                <td class="s2" id="cell-22">W</td>
+                <td class="s2" id="cell-23">X</td>
+                <td class="s2" id="cell-24">Y</td>
+                <td class="s2" id="cell-25">Z</td>
+            </tr>
+        </tbody>
+    </table>
+<script>
+    function resizeBigTable() {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const portraitRatio = 1 / 1.45;
+      const bigTable = document.querySelector('.big-table');
+      // Calculate which dimension to use so the table always fits
+      if (vw / vh < portraitRatio) {
+        // Screen is too tall, fit width
+        bigTable.style.width = vw + 'px';
+        bigTable.style.height = (vw / portraitRatio) + 'px';
+      } else {
+        // Screen is too wide, fit height
+        bigTable.style.height = vh + 'px';
+        bigTable.style.width = (vh * portraitRatio) + 'px';
+      }
+    }
+    window.addEventListener('resize', resizeBigTable);
+    window.addEventListener('DOMContentLoaded', resizeBigTable);
+  </script>
+</body>
+</html>
